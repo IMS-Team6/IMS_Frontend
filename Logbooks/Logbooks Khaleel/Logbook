@@ -3,9 +3,16 @@
 V13: Vi hade flera möten där vi snackade om hur vi ska dela upp uppgifterna och hur vi ska arbeta, jag valde front-end
 
 V14:
- 6/4 have jag möte med min grupp (front end) där vi bröt ner våra tasks till mindre tasks och började disskutera hur vi ska börja med att sätta upp projektet på android studio samt vad för programmerings språk vi ska ha.
+ 6/4 jag möte med min grupp (front end) där vi bröt ner våra tasks till mindre tasks och började diskutera hur vi ska börja med att sätta upp projektet på android studio samt vad för programmeringsspråk vi ska ha. Vi valde Android Kotlin
  
-7/4 möte med gruppen där vi satte upp ett git projekt, Vi skapade ett UX diagram på hur vi vill applikationen ska se ut och vad för funktioner som behövs för att komnicera med både backend och mower. 
+7/4 möte med gruppen där vi satte upp ett git projekt, Vi skapade ett UX diagram på hur vi vill applikationen ska se ut och vad för funktioner som behövs för att kommunicera med både backend och mower. 
 
-8/4
+8/4: Vi hade möte med hela gruppen där vi stämde av med varandra hur långt man har kommit (Front-end, Back-end och Mower) inom sina processer. 
+
+8/4: Hade möte med min grupp (front-end) där vi snackade om hur vi ska lägga upp vårt projekt och hur vi ska förbereda bluetooth för att skapa en stabil connection mellan mower och appen (ingen kodning skedde) 
+
+12/4 Hade möte med gruppen (front-end) där vi tilldelade olika uppgifter för att sätta upp en fungerande applikation och därefter påbörja Bluetooth implementering.
+Jag skapade en navbar till våra aktiviteter. Jag började kolla dokumentationer om hur man implementerar Bluetooth koppling på kotlin.
+
+
 
