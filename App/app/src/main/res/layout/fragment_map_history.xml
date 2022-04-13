@@ -20,15 +20,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/historyMap"
+    <com.example.myapplication.GraphView
+        android:id="@+id/mapHistoryGraph"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
+        android:background="@drawable/map_border"
         app:layout_constraintBottom_toTopOf="@+id/moverHistorySpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapHistoryFragment"/>
+        app:layout_constraintTop_toBottomOf="@+id/mapHistoryFragment" />
 
     <Spinner
         android:id="@+id/moverHistorySpinner"
