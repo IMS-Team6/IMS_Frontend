@@ -57,8 +57,8 @@ class MapHistoryFragment : Fragment() {
             val random = Random()
             val myList = mutableListOf<DataPoint>()
 
-            for (i in 0..50) {
-                val x = random.nextInt(500) + mapRect.centerX()
+            for (i in 0..10) {
+                val x = random.nextInt(300) + mapRect.centerX()
                 val y = random.nextInt(500) + mapRect.centerY()
 
                 val randomDataPoint = DataPoint(x, y)
