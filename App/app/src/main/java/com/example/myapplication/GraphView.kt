@@ -21,7 +21,7 @@ class GraphView(context: Context, attributeSet: AttributeSet): View(context, att
         super.onDraw(canvas)
 
         dataSet.forEach() { dataPoint ->
-            canvas.drawCircle(dataPoint.xVal.toFloat(), dataPoint.yVal.toFloat(), 20f, dataPointPaint)
+            canvas.drawCircle(dataPoint.xVal.toFloat(), dataPoint.yVal.toFloat(), 10f, dataPointPaint)
         }
     }
 

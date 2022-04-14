@@ -13,7 +13,9 @@ import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import android.widget.Spinner
 import android.widget.TextView
+import java.lang.Math.random
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 import kotlin.random.Random.Default.nextInt
 
@@ -42,29 +44,29 @@ class MapHistoryFragment : Fragment() {
         return viewOfLayout
     }
 
-    // Gets the location and size of the map and saves the boundaries to variables within this fragment.
     internal inner class GetMapLocation: ViewTreeObserver.OnGlobalLayoutListener {
 
         override fun onGlobalLayout() {
             val graphTitle: TextView = viewOfLayout.findViewById((R.id.mapHistoryTitle))
             val mapView: GraphView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
 
-            // Create a rect that represent the maps boundaries.
+            // Create a rectangle that represent the map boundaries.
             var mapRect = Rect(mapView.left, (mapView.top - graphTitle.height), mapView.right, (mapView.bottom - graphTitle.height))
 
-            // Set out data point on map
-            val topLeft = DataPoint(mapRect.left, mapRect.top)
-            val topRight = DataPoint(mapRect.right, mapRect.top)
-            val bottomLeft = DataPoint(mapRect.left, mapRect.bottom)
-            val bottomRight = DataPoint(mapRect.right, mapRect.bottom)
+            // Generate random dummy data points to be rendered on map.
+            val random = Random()
+            val myList = mutableListOf<DataPoint>()
 
-            val list = mutableListOf<DataPoint>()
-            list.add(topLeft)
-            list.add(topRight)
-            list.add(bottomLeft)
-            list.add(bottomRight)
+            for (i in 0..50) {
+                val x = random.nextInt(500) + mapRect.centerX()
+                val y = random.nextInt(500) + mapRect.centerY()
 
-            mapView.setData(list)
+                val randomDataPoint = DataPoint(x, y)
+                myList.add(randomDataPoint)
+            }
+
+
+            mapView.setData(myList)
         }
     }
 
