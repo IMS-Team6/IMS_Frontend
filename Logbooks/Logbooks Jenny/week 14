@@ -1,0 +1,49 @@
+Logbook activity				Jenny Jansson, group 6
+
+
+1 / 4
+Meeting with the frontend group. Discussion of what our tasks are. According to task for what an App s
+hould do is two EPICS. As first EPIC we shall take user input and translate this to drive commands passed to 
+the robot, and second EPIC is that the app shall visualize the path travelled by the Mower including collision 
+avoidance events. The meeting was much more clear than last time. Epics were made to user stories on GitHub.
+We made user stories of Bluetooth and main activity as a start point of frontend work. 
+3hrs
+
+5/4
+Zoom lecture and then meeting with the whole group. The group created a project on GitHub where the code will
+be committed in future. The project is separated in three different repositories. Mower, backend, and frontend.  
+A group member showed how to commit in GitHub, a short repeat for everyone who wanted a walkthrough GitHub.  
+3hrs
+
+
+
+6/4
+Meeting with frontend group. A group member did set up a project in android studio and committed. Our other 
+members task was to see if we can fetch it successfully. The versions needed to be updated and some simulators 
+didn’t work, tother we made sure that everyone had the Kotlin environment Android studio working, which took 
+a lot of time. 
+Since we don’t have UX designer, we planned to make a quick fix on the architecture on the app. A mockup to know 
+how to program the app. The priority is s till to set up Bluetooth as soon as possible. Also, everyone got an 
+assignment to watch and follow Kotlin tutorial that is on 1 hour. The purpose is to get use to classes, fragments, 
+and activities. XML files is representing the views of the app and java files is the logic of the app. We also 
+discussed which API level the Kotlin programming should contain. Newest version is APL level 31 but as recommended 
+from previous course Android development we had last year, we should take the one API that been pushed a while such 
+as API level 28, to minimize the risk of Mower not connecting to the Bluetooth we implement.
+A documentation of the Bluetooth set up is prepared to apply to the app in soon future. Which I did read and 
+keep making the simulator work on my computer. 
+Walkthrough the tutorial and follow it which took approximate 2hours.
+6hrs
+
+7/4
+Meeting with the whole group: 
+Stand up meeting with whole group. So far we all started will our tasks. Our leader will have 
+meeting with Husqvarna.
+
+meeting with frontend, we made 4 different fragments, on monday we will decided who will work with which fragment.
+
+Work I done on my own:
+Making sure that simulator works on my computer. Followed tutorial on 1h, 
+learning about fragments
+8hrs
+
+Total 20hrs

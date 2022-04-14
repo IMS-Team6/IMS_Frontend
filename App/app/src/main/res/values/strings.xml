@@ -8,4 +8,7 @@
         <item>Three</item>
         <item>Four</item>
     </string-array>
+  
+    <string name="string_item" />
+
 </resources>
