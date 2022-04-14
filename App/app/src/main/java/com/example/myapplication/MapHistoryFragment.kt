@@ -1,15 +1,20 @@
 package com.example.myapplication
 
 import android.content.res.Resources
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ArrayAdapter
+import android.widget.FrameLayout
 import android.widget.Spinner
+import android.widget.TextView
 import java.util.*
+import kotlin.properties.Delegates
 import kotlin.random.Random.Default.nextInt
 
 
@@ -25,7 +30,7 @@ class MapHistoryFragment : Fragment() {
 
         // Setup history map.
         val historyGraph: GraphView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
-        historyGraph.setData(generateRandomDataPoints())
+        historyGraph.viewTreeObserver.addOnGlobalLayoutListener(GetMapLocation())
 
         // Setup dropdown menu
         // Todo: Remove dummy data and populate spinner with actual data fetched from the backend.
@@ -37,26 +42,30 @@ class MapHistoryFragment : Fragment() {
         return viewOfLayout
     }
 
-    private fun generateRandomDataPoints(): List<DataPoint> {
+    // Gets the location and size of the map and saves the boundaries to variables within this fragment.
+    internal inner class GetMapLocation: ViewTreeObserver.OnGlobalLayoutListener {
 
-        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-        val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+        override fun onGlobalLayout() {
+            val graphTitle: TextView = viewOfLayout.findViewById((R.id.mapHistoryTitle))
+            val mapView: GraphView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
 
-        val screenHorizontalCenter = screenWidth / 2
-        val screenVerticalCenter = screenHeight / 2
+            // Create a rect that represent the maps boundaries.
+            var mapRect = Rect(mapView.left, (mapView.top - graphTitle.height), mapView.right, (mapView.bottom - graphTitle.height))
 
-        val list = mutableListOf<DataPoint>()
+            // Set out data point on map
+            val topLeft = DataPoint(mapRect.left, mapRect.top)
+            val topRight = DataPoint(mapRect.right, mapRect.top)
+            val bottomLeft = DataPoint(mapRect.left, mapRect.bottom)
+            val bottomRight = DataPoint(mapRect.right, mapRect.bottom)
 
-        val random = Random()
+            val list = mutableListOf<DataPoint>()
+            list.add(topLeft)
+            list.add(topRight)
+            list.add(bottomLeft)
+            list.add(bottomRight)
 
-        for (i in 0..50) {
-            val xVal = random.nextInt(100) + screenHorizontalCenter
-            val yVal = random.nextInt(100) + screenVerticalCenter
-
-            list.add(DataPoint(xVal, yVal))
+            mapView.setData(list)
         }
-
-        return list
     }
 
 }

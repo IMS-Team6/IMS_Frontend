@@ -6,26 +6,22 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewTreeObserver
 
 
 class GraphView(context: Context, attributeSet: AttributeSet): View(context, attributeSet) {
 
     private val dataSet = mutableSetOf<DataPoint>()
 
-    private var xMin = 0
-    private var xMax = 0
-    private var yMin = 0
-    private var yMax = 0
-
     private val dataPointPaint = Paint().apply {
-        color = Color.BLACK
+        color = Color.RED
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         dataSet.forEach() { dataPoint ->
-            canvas.drawCircle(dataPoint.xVal.toFloat(), dataPoint.yVal.toFloat(), 5f, dataPointPaint)
+            canvas.drawCircle(dataPoint.xVal.toFloat(), dataPoint.yVal.toFloat(), 20f, dataPointPaint)
         }
     }
 
@@ -33,10 +29,9 @@ class GraphView(context: Context, attributeSet: AttributeSet): View(context, att
         dataSet.clear()
         dataSet.addAll(newDataSet)
     }
-
 }
 
 data class DataPoint(
-    val xVal: Int,
-    val yVal: Int,
+    var xVal: Int,
+    var yVal: Int,
 )

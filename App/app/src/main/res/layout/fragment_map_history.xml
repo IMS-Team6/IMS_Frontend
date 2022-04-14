@@ -8,7 +8,7 @@
     tools:context=".ConnectFragment">
 
     <TextView
-        android:id="@+id/mapHistoryFragment"
+        android:id="@+id/mapHistoryTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mover History"
@@ -24,12 +24,11 @@
         android:id="@+id/mapHistoryGraph"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
         android:background="@drawable/map_border"
         app:layout_constraintBottom_toTopOf="@+id/moverHistorySpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapHistoryFragment" />
+        app:layout_constraintTop_toBottomOf="@+id/mapHistoryTitle"/>
 
     <Spinner
         android:id="@+id/moverHistorySpinner"
