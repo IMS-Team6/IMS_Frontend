@@ -1,0 +1,62 @@
+Week 15             Jenny Jansson
+Monday 11/4
+Third week of the project.
+Sprint planning with whole group. Group decided to have stand up meeting at Friday.
+This week hardware group is responsible for finalizing Bluetooth connection. 
+Backend is responsible for developing API for GET and Post position/request. 
+My group frontend is aiming to accomplish Connect Bluetooth object to application and establish connection to robot/mower. 
+1h
+Work on my own was to try out all Kotlin basics, following fragments tutorials.
+4h
+
+12/4
+Meeting with frontend group at 1pm through discord. Agenda is to distribute user stories 
+and to declare them. Our priority is to set up Bluetooth as soon as possible. The foundation of 
+buttons and each fragment is supposed to be an assignment for each team worker of the frontend team. 
+The UX designer student this week will take care of the frontend design. A meeting with UX is planned for tomorrow.
+Each for button a function event listener to start and toggle the buttons.  Our organization IMS6 have a function 
+in GitHub called issues where each ticket is dedicated for each assignment. 
+Four user stories are created on GitHub, first create layout for ConnectFragment which I took. Another is created 
+layout for MapHistoryFragment, create layout for ControlFragment and create navbar for application. Goal is to be 
+finished with these tasks until tomorrow.
+2h
+Finally, my simulator is working on my laptop. The problem was that the android studio had update version 
+but not components like simulator. Now updated and the program is working. I’m setting up my own branch 
+on GitHub. Next step is to work with my user story called “create layout for ConnectFragment”. Visuals 
+tells that I need to create a picture of Bluetooth, a button that says, “connect to Bluetooth”.
+Also, I tried to find out how we can set up Bluetooth connection.
+4 hours
+
+13/4
+Meeting with frontend
+Just checkup how everything is going if anyone needs help. I did set up id for image and button 
+in XML file but now a code needs to be implemented. 
+3h
+Wednesday
+Work on my own, I checked documentations and tutorials on now to implement in fragments image 
+view and button. All the documentations seem to refer only in activity but that is a bit different in 
+fragments. Base structure should be when putting a function in a variable then reuse it with the id and its 
+resource, like this (R.draw.imageview) with oncreate method but for now it resulting errors.
+5h
+Thursday 
+Guest lecture with Linus Rudbeck at 15 pm. Overall and general how mobile systems 
+works and own experience. 
+2h
+
+Friday
+Standup meeting with whole group.
+Frontend is having a bit problem with fragments including me. Working activities and now we started to 
+implement Bluetooth. Another group member is having problem with permissions. 
+Hardware group made changes on Bluetooth connection that is connected to raspberry pi. Bluetooth Serie 
+connection with raspberry pi with a test app, seems like it works.
+2h
+Backend is working with get and post request including API.
+Authentications need to be set up; they are keep working with it. Azure and AWS light sale 
+trying to set up for deploying. They managed to deploy backend to AWS C3 lightsale which was 
+easier and better solution than Azure. Next week they will try to fix it on Azure but if it won’t work, 
+they will keep it on AWS lightsale.
+Planned sprint planning meeting on Wednesday 15.15 pm.
+Work on my own trying to fix connect fragment before next meeting.
+5h
+
+Total 24h
