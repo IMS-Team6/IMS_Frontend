@@ -11,8 +11,18 @@ V14:
 
 8/4: Hade möte med min grupp (front-end) där vi snackade om hur vi ska lägga upp vårt projekt och hur vi ska förbereda bluetooth för att skapa en stabil connection mellan mower och appen (ingen kodning skedde) 
 
-12/4 Hade möte med gruppen (front-end) där vi tilldelade olika uppgifter för att sätta upp en fungerande applikation och därefter påbörja Bluetooth implementering.
-Jag skapade en navbar till våra aktiviteter. Jag började kolla dokumentationer om hur man implementerar Bluetooth koppling på kotlin.
+12/4 Hade möte med gruppen (front-end) där vi tilldelade olika uppgifter för att sätta upp en fungerande applikation. Jag skapade en navbar till våra aktiviteter. Jag började kolla dokumentationer om hur man implementerar Bluetooth koppling på kotlin.
+
+13/4 jag kodade själv hemifrån och testade olika metoder till bluetooth kopplinggen.
+
+14/4 Fick i uppdrag att kontrollera mickes kod som var för ritningen av kartan på mowern, sedan mergade vi ihop hans branch med main då den var fungerande och error fri.
+
+15/4 vi hade ett möte där vi tog upp bluetooth koden som jag hade skrivit och disskuterade om vilken data vi behöver skicka och vad för data vi behöver få från de andra grupperna. Min kod funkade och lyckades fixa premission men stöttade på problem framöver vilket jag och micke samarbetade med. 
+ 
+Vi hade STAND-UP möte med hela gruppen där alla pratade om vad de hade gjort och hur långt man har kommit, vi på front end log ganska bra till då vi hade gjort klart det mesta av våra todo för veckan. Under mötet så fick vi reda på vad för data som krävs från oss samt vad för data de andra behöver från oss.
+
+16/4 Jag fortsatte jobba med bluetooth koden själv
+
 
 
 
