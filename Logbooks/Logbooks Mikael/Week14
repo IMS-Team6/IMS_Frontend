@@ -1,0 +1,38 @@
+<Mikael Mohlin - Week 14>
+
+1/4
+We in the frontend group had a meeting about our two main epics for this project. We discussed the overall requirements for each epic and also how we could 
+divide them into user stories respectively smaller tasks. The first epic is that the app shall be able to send "move" signals to the mover via a bluetooth connection
+and the other epic reads that the app should be able to visualize the path travelled  by the mover. By using a project board inside github we in the group could
+easily visualize how the different epics and user stories should be picked apart and assigned to each member.
+(~ 3hrs)
+
+5/4
+Another meeting was held where we discussed how the sub-teams (frontend, backend and hardware) should store their code for this project. The solution was that we created
+3 seperate repositories inside the same orginazation which in our case is called 'IMS_Team6'.
+I also spent time watching a lecture from this course via Zoom.
+(~ 3hrs)
+
+6/4
+Since it was a while ago when i worked with Android Studio, some time were spent on how to make a basic Android application.
+Another meeting was held with the us inside the frontend group where we assured that the repository was created and that everyone had access to it. I took the time
+to create a android project locally and push into our repository.
+To know how we should start working on the app we had to discuss the basic functionalities and layouts it should have. And since our UX designer was sick we had to
+create a mockup (via draw.io) on how each view/activity should look like in a 'basic form'. The plan is that our UX designer will continue making a real mockup
+with a better design once when the designer gets healthy.
+(~ 6hrs)
+
+7/4
+I spent some time on following a tutorial on Youtube on how to work with fragments in an Android application.
+We spent this day to create the basic architecture for the app. Which in our case was a navigation bar at the bottom folloed up by 3 different fragments which can be 
+toggled via 3 butttons within the navigation bar.
+(~ 4hrs)
+
+8/4
+Another meetings was held by us in the frontend group. We discussed how we should divide the different tasks we had in front of us which in this case was to work
+with the different fragments created for the application. The fragments that existed were (ControlFragment, MapHistoryFragment and ConnectFragment). I took on the
+assignment to work with the MapHistoryFragment which in turn shall visuzlize the path travelled by the mover.
+(~ 4hrs)
+
+Total hours spent: ~40hours
+
