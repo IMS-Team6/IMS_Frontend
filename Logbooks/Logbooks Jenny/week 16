@@ -1,0 +1,26 @@
+Week 16
+Monday red day
+
+19/4
+Lesson canceled
+Work on my own. Connecting android studio with GitHub which got issues because of updates. Kept working on my fragment connect_fragment.
+4h
+
+20/4
+Meeting with whole group. Update of what have been done so far. Hardware are done with Bluetooth connection and the set-up from frontend is awaited. We didn’t manage to make connection yet because every time we update the session connection get disconnected. 
+Sprint planning is that API from backend need to be completed and frontend need to make sure that Bluetooth connecting is ready.
+I got help with connecting fragment from another frontend team worker but now commit is need.
+Plan is to work together on the Bluetooth connection in whole frontend
+l 6h
+
+21/4
+Frontend work
+Managed to download and connect GitHub to the project. With GitHub desktop fetch request and pull request successfully committed. Now more coding on fragment and try to follow Bluetooth documentation. 
+6h
+Meeting with the frontend?
+
+22/4 meeting
+Working on fragments
+4h
+
+Total 20h
