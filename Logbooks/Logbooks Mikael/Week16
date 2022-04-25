@@ -1,0 +1,23 @@
+<Mikael Mohlin - Week 16>
+
+20/4
+A meeting with the whole group was held with intention to get an update on how everyone was doing on the project.
+The hardware team was done with setting up the bluetooth connection from their own part and simply waited for us in the frontend to finalize our
+bluetooth functioanlity from the app. The backend was still working with their API and had as a goal to finalize it at the end of this week.
+We from the frontend team was still not done with bluetooth, since we had some problems with permissions and connections on the app.
+Another member of the frontend group had worked on bluetooth for a while now, but did encounter these mentioned problems, so I decided to create a new branch
+with intention to try implementing bluetooth. At the end of the day, I did manage to implement so that user-permissions and scanning of bluetooth devices worked
+on the app. But it was still much to do left.
+(~ 6 hours)
+
+21/4
+I continued working with bluetooth on my own branch, where I worked on trying to setup a bluetooth connection with another device. The external device
+I tested a connection with was my laptop, and after a few hours of grinding I finally managed to connect the application with the laptop. However, I noticed
+that once i wanted to connect a second time it wouldnt work, so I still had some problems yet to fix.
+(~ 8 hours)
+
+22/4
+Watched lecture from the guest lecturer Linus Rudbeck
+(~ 2 hours)
+
+Total hours spend: ~ 16 hours
