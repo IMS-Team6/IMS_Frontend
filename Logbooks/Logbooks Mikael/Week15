@@ -1,0 +1,35 @@
+<Mikael Mohlin - Week 15>
+
+11/4
+We had a spring planning meeting with the whole group, in which we decided goals for this sprint for each sub-group:
+Hardware: Finalize bluetooth functionality on mover.
+Backend: Setup the API from the backend.
+Frontend: Setup and finalize the bluetooth feature from the mobile application.
+Rest of the day was spent on watching tutorials on how to work with fragments in android studio
+(~ 4 hours)
+
+12/4 
+A meeting with the frontend group was held with the intention to go through each seperate user story from our project, to then 
+assign one user story to each member to work on. The most important task we had in front of us were to get bluetooth functioning on the app,
+and since none of us in the frontend group have worked on that before, we had to spend some time first to read documentations and follow tutorials.
+For my own part, I worked with the MapHistoryFragment, in which i implemented the fundemental layout for that fragment.
+(~ 4 hours)
+
+13/4
+I continued working with the MapHistoryFragment in which I tried to come up with a smart solution on how the overall map should be visualized for
+the path travelled by the mover. But the task was way harder than I thought since there were not any good libraries to use for that specific
+feature. Most of the libraries i stumbled upon was ordinary graphs, with an x and a y-axis, but where the overall sequence of the data points
+could be visualized from left to right. I needed to find a library in which the datapoints could be visualized in a 2D view, where all data points
+could be placed in different locations. But in the end I found a functionality in Android Studio called "draw on canvas", which means that you can draw
+manually on the screen however you want, without a defined coordinate system. So, that is what I started to implement next.
+(~ 5 hours)
+
+14/4
+I continued working on the "draw on canvas" functionality. But since I never worked on it before, I had to watch several tutorials on how to work with it.
+At the end of this work session I managed to fix so that data points could be drawn inside a defined "drawing area" within the fragment. These data points in which
+came from an ordinary list of x & y values. I also managed to implement so that a line was drawn between each of these data points, which in the future, will 
+represent the path travelled by the mover.
+In the afternoon I viewed a lecture from a guest lecturer called Linus Rudbeck.
+(~ 5 hours)
+
+Total hours spend: ~ 18 hours
