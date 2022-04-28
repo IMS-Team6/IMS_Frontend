@@ -30,14 +30,9 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var btDevice: BluetoothDevice
-
-    private val testMacAddress: String = "4C:EB:BD:41:95:04"
-    private val testUuId: String = "0000111e-0000-1000-8000-00805f9b34fb"
-
     private val moverMacAddress: String = "B8:27:EB:21:8A:D4"
-    private val moverUuId: String = ""
-
+    private val moverUuId: String = "7be1fcb3-5776-42fb-91fd-2ee7b5bbb86d"
+    
     private val receiver = object: BroadcastReceiver() {
         @SuppressLint("MissingPermission")
 
@@ -93,10 +88,9 @@ class MainActivity : AppCompatActivity() {
                     setupBluetoothPermissions()
                 } else {
                     // Bluetooth is enabled!
-                    val btDevice = bluetoothAdapter.getRemoteDevice(testMacAddress)
+                    val btDevice = bluetoothAdapter.getRemoteDevice(moverMacAddress)
                     val btConnectionThread = BtConnectThread(btDevice)
                     btConnectionThread.run(bluetoothAdapter)
-
 
                     //getPairedDevices(bluetoothAdapter)
 
@@ -160,7 +154,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private inner class BtConnectThread(device: BluetoothDevice) : Thread() {
 
-        private val btDeviceAddress = UUID.fromString(testUuId)
+        private val btDeviceAddress = UUID.fromString(moverUuId)
 
         private val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
             device.createRfcommSocketToServiceRecord(btDeviceAddress)
