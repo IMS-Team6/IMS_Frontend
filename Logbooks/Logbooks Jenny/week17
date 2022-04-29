@@ -1,0 +1,31 @@
+Week 17                                                             Jenny Jansson
+Meeting with group Monday 25/4
+Sprint planning (didn't attend).
+
+26/4
+Work on my own: we got a list from backend that states a process of fetching sessions. 
+The session contains information whatever a robot has started, moving or stopped/ended session. 
+With session it allows to draw a path, and this is when we should start working on map 
+functions on frontend. Also, we should be consistent about whether the collision is true or false. 
+Reading about this type functions and watching tutorials.
+9hrs 
+
+27/4
+Lecture about lidar sensors and cloud services.
+4hrs
+
+Friday 29/4
+Meeting with whole group at 3.15 pm discord call.
+Retrospective. Our Bluetooth connection works, and it is possible to connect it to device.
+Merging the branch to main branch of working Bluetooth from a team worker.
+We got information of our team leader that Presentation will be on campus
+Next meeting is on Monday at 3pm for sprint planning.
+1h
+
+Meeting with frontend group.
+We discussed what is the next step. Start work on next mission. Work on own mission: 
+During the weekend we will try to accomplish some functions for mapping. 
+Also check our user stories on GitHub. 
+6hrs
+
+Total 20hrs
