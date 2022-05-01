@@ -28,4 +28,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/connectFragment" />
 
+    <Button
+        android:id="@+id/FindBluetoothDevices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Find bluetooth devices"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bluetoothConnectButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

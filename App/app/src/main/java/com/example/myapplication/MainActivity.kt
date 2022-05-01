@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.Manifest
+import android.R.attr
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -11,28 +12,44 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.ParcelUuid
 import android.util.Log
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.io.IOException
-import java.lang.reflect.Method
+import java.io.InputStream
+import java.io.OutputStream
+import java.nio.ByteBuffer
 import java.util.*
 
 
+object PermissionsBasedOnSDKVersion {
+    var sdk31Permissions = arrayOf(
+    Manifest.permission.BLUETOOTH_SCAN,
+    Manifest.permission.BLUETOOTH_CONNECT,
+    Manifest.permission.BLUETOOTH_ADMIN)
+
+    var sdk30Permissions =arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.BLUETOOTH,
+        Manifest.permission.BLUETOOTH_ADMIN
+    )
+}
+
 class MainActivity : AppCompatActivity() {
+
 
     private val moverMacAddress: String = "B8:27:EB:21:8A:D4"
     private val moverUuId: String = "7be1fcb3-5776-42fb-91fd-2ee7b5bbb86d"
-    
+    private lateinit var btConnectionThread: BtConnectThread
+
     private val receiver = object: BroadcastReceiver() {
         @SuppressLint("MissingPermission")
 
@@ -40,7 +57,7 @@ class MainActivity : AppCompatActivity() {
             val action: String? = intent.action
             when(action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    Log.d("Bluetooth Status", "Device found!")
+                    Log.d("bluetooth", "Device found!")
 
                     // Discovery has found a device. Get the BluetoothDevice
                     // object and its info from the Intent.
@@ -50,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                     val deviceName = device?.name
                     val deviceHardwareAddress = device?.address // MAC address
                     val id = device?.uuids
+                    Log.d("bluetooth", deviceName + " " + deviceHardwareAddress)
                 }
             }
         }
@@ -60,9 +78,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Register for broadcasts when a device is discovered
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        registerReceiver(receiver, filter)
 
         val bottomNavigationItemView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navController = findNavController(R.id.fragment)
@@ -75,6 +90,29 @@ class MainActivity : AppCompatActivity() {
 
         val bluetoothConnectBtn: Button = findViewById(R.id.bluetoothConnectButton)
 
+        var bluetoothFindBtn: Button = findViewById(R.id.FindBluetoothDevices);
+
+        bluetoothFindBtn.setOnClickListener {
+            Log.d("bluetooth", "find bluetooth devices clicked")
+            if(bluetoothAdapter == null) {
+                Log.d("bluetooth", "Device does not support bluetooth.")
+            } else {
+                if(!bluetoothAdapter.isEnabled) {
+                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                    startActivityForResult(enableBtIntent, 9)
+                } else {
+                    if(!checkPermissions()) {
+                        setupBluetoothPermissions()
+                    } else {
+                        Log.d("bluetooth", "Setting up receiver for finding bluetooth devices")
+                        // Register for broadcasts when a device is discovered
+                        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+                        registerReceiver(receiver, filter)
+                    }
+                }
+            }
+        }
+
         bluetoothConnectBtn.setOnClickListener {
             // Check if device supports bluetooth
             if (bluetoothAdapter == null) {
@@ -84,19 +122,44 @@ class MainActivity : AppCompatActivity() {
 
                 // Check if bluetooth is enabled
                 if (!bluetoothAdapter.isEnabled) {
-                    // Bluetooth is not enabled.
-                    setupBluetoothPermissions()
+                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                    startActivityForResult(enableBtIntent, 9)
                 } else {
-                    // Bluetooth is enabled!
-                    val btDevice = bluetoothAdapter.getRemoteDevice(moverMacAddress)
-                    val btConnectionThread = BtConnectThread(btDevice)
-                    btConnectionThread.run(bluetoothAdapter)
-
+                    if(!checkPermissions()) {
+                        setupBluetoothPermissions()
+                    } else {
+                        // Bluetooth is enabled!
+                        val btDevice = bluetoothAdapter.getRemoteDevice(moverMacAddress)
+                        btConnectionThread = BtConnectThread(btDevice)
+                        btConnectionThread.run(bluetoothAdapter)
+                        Log.d("bluetooth", "connected?")
+                    }
                     //getPairedDevices(bluetoothAdapter)
 
                 }
             }
         }
+    }
+
+    private fun checkPermissions(): Boolean {
+        var result = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+            PermissionsBasedOnSDKVersion.sdk31Permissions.forEach {
+                result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+                if(!result)
+                    return  result;
+            }
+        }
+        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            PermissionsBasedOnSDKVersion.sdk30Permissions.forEach {
+                result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+                if(!result)
+                    return  result;
+            }
+        }
+
+        return result;
     }
 
     override fun onDestroy() {
@@ -106,9 +169,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBluetoothPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            requestMultiplePermissions.launch(arrayOf(
-                Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT))
+            requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk31Permissions)
+        }
+        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk30Permissions)
         }
         else{
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
@@ -145,36 +209,62 @@ class MainActivity : AppCompatActivity() {
             permissions.entries.forEach {
                 Log.d("test006", "${it.key} = ${it.value}")
             }
+
+            Log.d("Bluetooth", "received res")
         }
 
     private fun manageMyConnectedSocket(socket: BluetoothSocket) {
-        // TODO: Manage connection.
+
     }
+
+    public fun writeData(data: Int) {
+        this.btConnectionThread.writeData(data)
+    }
+
+
 
     @SuppressLint("MissingPermission")
     private inner class BtConnectThread(device: BluetoothDevice) : Thread() {
 
         private val btDeviceAddress = UUID.fromString(moverUuId)
+        lateinit var mmInStream: InputStream;
+        lateinit var mmOutStream: OutputStream;
 
         private val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
-            device.createRfcommSocketToServiceRecord(btDeviceAddress)
+            device.createInsecureRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"))//btDeviceAddress)
+        }
+
+        public fun writeData(data: Int) {
+            try {
+                val byteArr: ByteArray = ByteBuffer.allocate(4).putInt(attr.data).array()
+                mmOutStream.write(byteArr);
+            } catch (e: java.lang.Exception) {
+                Log.e("bluetooth", "Exception during write", e)
+            }
         }
 
         fun run(bluetoothAdapter: BluetoothAdapter) {
-            // Cancel discovery because it otherwise slows down the connection.
-            bluetoothAdapter.cancelDiscovery()
+            try {
+                // Cancel discovery because it otherwise slows down the connection.
+                bluetoothAdapter.cancelDiscovery()
 
-            mmSocket.let { socket ->
-                if (socket != null) {
-                    Log.d("Status:", "Connecting to device...")
-                    // Connect to the remote device through the socket. This call blocks
-                    // until it succeeds or throws an exception.
-                    socket.connect()
+                mmSocket.let { socket ->
+                    if (socket != null) {
+                        Log.d("bluetooth", "Connecting to device...")
+                        // Connect to the remote device through the socket. This call blocks
+                        // until it succeeds or throws an exception.
+                        socket.connect()
+                        Log.d("bluetooth", "Is Connected?")
+                        // The connection attempt succeeded. Perform work associated with
+                        // the connection in a separate thread.
+                        mmInStream = socket.inputStream
+                        mmOutStream = socket.outputStream
 
-                    // The connection attempt succeeded. Perform work associated with
-                    // the connection in a separate thread.
-                    manageMyConnectedSocket(socket)
+                        //manageMyConnectedSocket(socket)
+                    }
                 }
+            } catch ( ex: Exception) {
+                Log.e("bluetooth", ex.message.toString())
             }
         }
 
