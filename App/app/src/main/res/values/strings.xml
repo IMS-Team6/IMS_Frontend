@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="controlFragment">Styr din drönare</string>
+    <string name="manuell">Manuellt</string>
+    <string name="auto">Automatiskt</string>
 
     <string-array name="test_array">
         <item>One</item>

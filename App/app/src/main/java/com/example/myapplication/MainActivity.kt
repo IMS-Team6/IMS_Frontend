@@ -17,6 +17,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -44,8 +45,6 @@ object PermissionsBasedOnSDKVersion {
 }
 
 class MainActivity : AppCompatActivity() {
-
-
     private val moverMacAddress: String = "B8:27:EB:21:8A:D4"
     private val moverUuId: String = "7be1fcb3-5776-42fb-91fd-2ee7b5bbb86d"
     private lateinit var btConnectionThread: BtConnectThread
@@ -77,7 +76,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
         val bottomNavigationItemView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navController = findNavController(R.id.fragment)
@@ -213,15 +211,14 @@ class MainActivity : AppCompatActivity() {
             Log.d("Bluetooth", "received res")
         }
 
-    private fun manageMyConnectedSocket(socket: BluetoothSocket) {
 
+    fun writeData(data: Int) {
+        if(this::btConnectionThread.isInitialized && btConnectionThread.isConnected()) {
+            btConnectionThread.writeData(data)
+        } else {
+            Toast.makeText(applicationContext,"Du är inte connectad till bluetooth",Toast.LENGTH_SHORT).show()
+        }
     }
-
-    public fun writeData(data: Int) {
-        this.btConnectionThread.writeData(data)
-    }
-
-
 
     @SuppressLint("MissingPermission")
     private inner class BtConnectThread(device: BluetoothDevice) : Thread() {
@@ -232,6 +229,10 @@ class MainActivity : AppCompatActivity() {
 
         private val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
             device.createInsecureRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"))//btDeviceAddress)
+        }
+
+        public fun isConnected(): Boolean {
+            return mmOutStream != null;
         }
 
         public fun writeData(data: Int) {
