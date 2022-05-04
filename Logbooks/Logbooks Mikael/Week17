@@ -1,0 +1,25 @@
+<Mikael Mohlin - Week 17>
+
+25/4
+A sprint planning meeeting was held with the whole group. Our goal from the frontend was to initiate a connection from the app to the mover.
+~ 1 hour
+
+26/4
+Took some time to watch some of the pre-recorded lectures, since I had not watched them yet.
+~ 4 hours
+
+28/4
+Spent the day working at the school with intention to finalize the bluetooth connection bewteen the app and mover. And eventually after a couple of hours,
+we finally managed to make the connection work. 
+So, inside the app there is a connection button within the ConnectFragment. When the user taps on that button, the app will try to look for and connect to
+a device with a pre-defined MAC-Address and UUId, which in our case is the mover.
+~ 6 hours
+
+29/4
+A retrospective meeting was held with the whole group. We, from the frontend had good news about bluetooth, where we finally have fixed the blutooth-
+connect feature. From that point forward, our next task was to figure out how to send data over the bluetooth connection and fortunately, two people 
+from our group offered to work on it over the weekend.
+I took some time after the meeting to merge my branch (where I worked on the bluetooth connection) and merge it with the main branch.
+~ 4 hours
+
+Total time spent: ~ 15 hours
