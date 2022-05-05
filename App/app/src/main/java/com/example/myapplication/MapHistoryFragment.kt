@@ -9,11 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.ArrayAdapter
-import android.widget.FrameLayout
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.lifecycle.lifecycleScope
+import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +29,9 @@ import kotlin.random.Random.Default.nextInt
 class MapHistoryFragment : Fragment() {
     private lateinit var viewOfLayout: View
     private lateinit var client: OkHttpClient
+    private lateinit var listOfSessions: List<SessionInfo>
+
+    private val BASE_URL: String = "http://3.72.195.76/api/"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,48 +46,60 @@ class MapHistoryFragment : Fragment() {
 
         // Create OkHttp Client.
         client = OkHttpClient()
-        Log.d("status", "Fetching sessions...")
-        fetch("http://3.72.195.76/api/sessions")
 
-        // Setup dropdown menu
-        // Todo: Remove dummy data and populate spinner with actual data fetched from the backend.
-        val spinner: Spinner = viewOfLayout.findViewById(R.id.moverHistorySpinner)
-        val testArray = resources.getStringArray(R.array.test_array)
-        val adapter = activity?.applicationContext?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, testArray) }
-        spinner.adapter = adapter
+        // Fetch mover sessions from backend API.
+        fetchSessions(BASE_URL + "sessions")
+
+        val updateSessionsListBtn = viewOfLayout.findViewById<Button>(R.id.updateSessionsList)
+
+        updateSessionsListBtn.setOnClickListener {
+            fetchSessions(BASE_URL + "sessions")
+        }
 
         return viewOfLayout
     }
 
-    private fun fetch(sUrl: String): Sessions? {
-        var sessions: Sessions? = null
+    private fun populateSpinnerWithSessions(sessions: List<SessionInfo>) {
+        val sessionsIds = arrayListOf<String>()
 
+        for (session in sessions) {
+            sessionsIds.add(session.sessionID)
+        }
+
+        val spinner: Spinner = viewOfLayout.findViewById(R.id.moverHistorySpinner)
+        spinner.adapter = context?.let { ArrayAdapter(it, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, sessionsIds) }
+    }
+
+    private fun fetchSessions(sUrl: String){
         lifecycleScope.launch(Dispatchers.IO) {
             val result = getRequest(sUrl)
 
             if (result != null) {
-
-                Log.d("RESULT", result)
-
-                /*
                 try {
-                    // Parse result string JSON to data class
-                    sessions = Klaxon().parse<Sessions>(result)
+                    val mapper = Klaxon()
+                    var sessions: List<SessionInfo>? = mapper.parseArray(result)
 
                     withContext(Dispatchers.Main) {
-                    Log.d("RESULT", "Success!")
+                        Log.d("RESULT", "Success!")
+
+                        if (sessions != null) {
+                            populateSpinnerWithSessions(sessions)
+                        } else {
+                            Toast.makeText(activity,"List of sessions is empty!",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }
+                catch (error: Error) {
+                    Log.d("ERROR", error.toString())
+                    Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show();
                 }
 
-                } catch (error: Error) {
-                    Log.d("ERROR", error.toString())
-                }
-                */
             } else {
                 Log.d("ERROR", "Request returned no response!")
+                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show();
             }
         }
-
-        return sessions
     }
 
     private fun getRequest(sUrl: String): String? {
@@ -136,4 +149,5 @@ class MapHistoryFragment : Fragment() {
 
 }
 
-data class Sessions(val sessionId: Int, val robotState: String, val isCollision: Boolean)
+data class SessionInfo(val sessionID: String, val robotState: String, val collision: java.lang.Boolean)
+
