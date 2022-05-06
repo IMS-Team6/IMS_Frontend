@@ -58,6 +58,7 @@ class MapHistoryFragment : Fragment() {
                 Log.d("SPINNER", "$selectedItem selected!")
 
                 fetchSession(BASE_URL + "session/" + selectedItem.toString())
+                // TODO: Serialize fetched object from backend.
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -162,6 +163,3 @@ class MapHistoryFragment : Fragment() {
     }
 
 }
-
-data class SessionInfo(val sessionID: String, val robotState: String, val collision: java.lang.Boolean)
-
