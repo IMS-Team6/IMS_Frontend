@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.lifecycle.lifecycleScope
+import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -58,7 +59,6 @@ class MapHistoryFragment : Fragment() {
                 Log.d("SPINNER", "$selectedItem selected!")
 
                 fetchSession(BASE_URL + "session/" + selectedItem.toString())
-                // TODO: Serialize fetched object from backend.
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -68,14 +68,29 @@ class MapHistoryFragment : Fragment() {
     }
 
     private fun fetchSession(sUrl: String) {
-        Log.d("Spinner", "Fetching session...")
-
         lifecycleScope.launch(Dispatchers.IO) {
             val result = getRequest(sUrl)
 
             if (result != null) {
                 try {
-                    Log.d("fetchSession", result)
+                    withContext(Dispatchers.Main) {
+                        val mapper = Klaxon()
+                        val session = mapper.parse<Session>(result)
+
+                        if (session != null) {
+                            val positions = session.positions
+                            val collisions = session.collisionPos
+
+                            Log.d("session", positions.toString())
+                            Log.d("session", collisions.toString())
+
+                            // TODO: Draw positions on map.
+
+                        } else {
+                            Log.d("ERROR", "Could not parse session object!")
+                        }
+
+                    }
                 }
                 catch (error: java.lang.Error) {
                     Log.d("ERROR", error.toString())
@@ -94,10 +109,10 @@ class MapHistoryFragment : Fragment() {
 
             if (result != null) {
                 try {
-                    val mapper = Klaxon()
-                    val sessions: List<SessionInfo>? = mapper.parseArray(result)
-
                     withContext(Dispatchers.Main) {
+                        val mapper = Klaxon()
+                        val sessions: List<SessionInfo>? = mapper.parseArray(result)
+
                         if (sessions != null) {
                             populateSpinnerWithSessions(sessions)
                         } else {
@@ -137,7 +152,7 @@ class MapHistoryFragment : Fragment() {
         return result
     }
 
-    internal inner class GetMapLocation: ViewTreeObserver.OnGlobalLayoutListener {
+    internal inner class GetMapLocation() : ViewTreeObserver.OnGlobalLayoutListener {
 
         override fun onGlobalLayout() {
             val graphTitle: TextView = viewOfLayout.findViewById((R.id.mapHistoryTitle))
