@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-import android.content.res.Resources
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
@@ -11,33 +10,23 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.lifecycle.lifecycleScope
-import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.lang.Math.random
 import java.net.URL
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.properties.Delegates
-import kotlin.random.Random.Default.nextInt
 
 
 class MapHistoryFragment : Fragment() {
     private lateinit var viewOfLayout: View
     private lateinit var client: OkHttpClient
-    private lateinit var listOfSessions: List<SessionInfo>
 
     private val BASE_URL: String = "http://3.72.195.76/api/"
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewOfLayout = inflater.inflate(R.layout.fragment_map_history, container, false)
 
         // Setup history map.
@@ -68,11 +57,32 @@ class MapHistoryFragment : Fragment() {
                 val selectedItem = parent?.getItemAtPosition(position)
                 Log.d("SPINNER", "$selectedItem selected!")
 
-                TODO("Create GET request to fetch selected session")
+                fetchSession(BASE_URL + "session/" + selectedItem.toString())
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 Log.d("Spinner", "Nothing!")
+            }
+        }
+    }
+
+    private fun fetchSession(sUrl: String) {
+        Log.d("Spinner", "Fetching session...")
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val result = getRequest(sUrl)
+
+            if (result != null) {
+                try {
+                    Log.d("fetchSession", result)
+                }
+                catch (error: java.lang.Error) {
+                    Log.d("ERROR", error.toString())
+                    Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Log.d("ERROR", "Request returned no response!")
+                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -84,18 +94,15 @@ class MapHistoryFragment : Fragment() {
             if (result != null) {
                 try {
                     val mapper = Klaxon()
-                    var sessions: List<SessionInfo>? = mapper.parseArray(result)
+                    val sessions: List<SessionInfo>? = mapper.parseArray(result)
 
                     withContext(Dispatchers.Main) {
-                        Log.d("RESULT", "Success!")
-
                         if (sessions != null) {
                             populateSpinnerWithSessions(sessions)
                         } else {
                             Toast.makeText(activity,"List of sessions is empty!",Toast.LENGTH_SHORT).show();
                         }
                     }
-
                 }
                 catch (error: Error) {
                     Log.d("ERROR", error.toString())
@@ -136,7 +143,7 @@ class MapHistoryFragment : Fragment() {
             val mapView: GraphView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
 
             // Create a rectangle that represent the map boundaries.
-            var mapRect = Rect(mapView.left, (mapView.top - graphTitle.height), mapView.right, (mapView.bottom - graphTitle.height))
+            val mapRect = Rect(mapView.left, (mapView.top - graphTitle.height), mapView.right, (mapView.bottom - graphTitle.height))
 
             // Generate random dummy data points to be rendered on map.
             val random = Random()
