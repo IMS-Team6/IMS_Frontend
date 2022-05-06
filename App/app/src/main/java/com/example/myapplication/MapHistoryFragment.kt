@@ -50,12 +50,6 @@ class MapHistoryFragment : Fragment() {
         // Fetch mover sessions from backend API.
         fetchSessions(BASE_URL + "sessions")
 
-        val updateSessionsListBtn = viewOfLayout.findViewById<Button>(R.id.updateSessionsList)
-
-        updateSessionsListBtn.setOnClickListener {
-            fetchSessions(BASE_URL + "sessions")
-        }
-
         return viewOfLayout
     }
 
@@ -68,6 +62,19 @@ class MapHistoryFragment : Fragment() {
 
         val spinner: Spinner = viewOfLayout.findViewById(R.id.moverHistorySpinner)
         spinner.adapter = context?.let { ArrayAdapter(it, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, sessionsIds) }
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedItem = parent?.getItemAtPosition(position)
+                Log.d("SPINNER", "$selectedItem selected!")
+
+                TODO("Create GET request to fetch selected session")
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Log.d("Spinner", "Nothing!")
+            }
+        }
     }
 
     private fun fetchSessions(sUrl: String){
