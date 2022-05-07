@@ -30,7 +30,6 @@ import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.util.*
 
-
 object PermissionsBasedOnSDKVersion {
     var sdk31Permissions = arrayOf(
     Manifest.permission.BLUETOOTH_SCAN,
@@ -47,7 +46,7 @@ object PermissionsBasedOnSDKVersion {
 class MainActivity : AppCompatActivity() {
     private val moverMacAddress: String = "B8:27:EB:21:8A:D4"
     private val moverUuId: String = "7be1fcb3-5776-42fb-91fd-2ee7b5bbb86d"
-    private lateinit var btConnectionThread: BtConnectThread
+    var btConnectionThread: BtConnectThread? = null;
 
     private val receiver = object: BroadcastReceiver() {
         @SuppressLint("MissingPermission")
@@ -129,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                         // Bluetooth is enabled!
                         val btDevice = bluetoothAdapter.getRemoteDevice(moverMacAddress)
                         btConnectionThread = BtConnectThread(btDevice)
-                        btConnectionThread.run(bluetoothAdapter)
+                        btConnectionThread!!.run(bluetoothAdapter)
                         Log.d("bluetooth", "connected?")
                     }
                     //getPairedDevices(bluetoothAdapter)
@@ -213,15 +212,15 @@ class MainActivity : AppCompatActivity() {
 
 
     fun writeData(data: Int) {
-        if(this::btConnectionThread.isInitialized && btConnectionThread.isConnected()) {
-            btConnectionThread.writeData(data)
+        if(btConnectionThread != null && btConnectionThread!!.isConnected()) {
+            btConnectionThread!!.writeData(data)
         } else {
             Toast.makeText(applicationContext,"Du är inte connectad till bluetooth",Toast.LENGTH_SHORT).show()
         }
     }
 
     @SuppressLint("MissingPermission")
-    private inner class BtConnectThread(device: BluetoothDevice) : Thread() {
+    inner class BtConnectThread(device: BluetoothDevice) : Thread() {
 
         private val btDeviceAddress = UUID.fromString(moverUuId)
         lateinit var mmInStream: InputStream;

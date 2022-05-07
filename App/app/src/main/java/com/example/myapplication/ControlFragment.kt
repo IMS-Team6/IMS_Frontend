@@ -8,12 +8,21 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_control.*
 
-
 class ControlFragment : Fragment(R.layout.fragment_control) {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val btConnectionThread = (activity as MainActivity).btConnectionThread;
+
+        if(btConnectionThread != null && btConnectionThread.isConnected()) {
+            bluetoothConnectText.setText(R.string.bluetoothConnected);
+            Log.i("Bluetooth", "Bluetooth Connected!")
+        } else {
+            bluetoothConnectText.setText(R.string.bluetoothNotConnected);
+            Log.i("Bluetooth", "Bluetooth not connected!");
+        }
 
         controlSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)

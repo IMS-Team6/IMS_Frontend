@@ -4,6 +4,8 @@
     <string name="controlFragment">Styr din drönare</string>
     <string name="manuell">Manuellt</string>
     <string name="auto">Automatiskt</string>
+    <string name="bluetoothConnected">Bluetooth är kopplad</string>
+    <string name="bluetoothNotConnected">Bluetooth är ej kopplad</string>
 
     <string-array name="test_array">
         <item>One</item>

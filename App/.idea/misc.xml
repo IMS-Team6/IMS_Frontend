@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Khaleel/Desktop/IMS_Frontend/App/app/src/main/res/drawable-anydpi/right_button.xml" value="0.344" />
-        <entry key="..\:/Users/Khaleel/Desktop/IMS_Frontend/App/app/src/main/res/drawable/control.xml" value="0.394" />
-        <entry key="..\:/Users/Khaleel/Desktop/IMS_Frontend/App/app/src/main/res/layout/fragment_control.xml" value="0.3421875" />
+        <entry key="..\:/Users/fahed/IMS_Frontend/App/app/src/main/res/drawable/arrow.xml" value="0.1" />
+        <entry key="..\:/Users/fahed/IMS_Frontend/App/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/fahed/IMS_Frontend/App/app/src/main/res/layout/fragment_connect.xml" value="0.1956521739130435" />
+        <entry key="..\:/Users/fahed/IMS_Frontend/App/app/src/main/res/layout/fragment_control.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/fahed/IMS_Frontend/App/app/src/main/res/layout/fragment_map_history.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/micke/Skolarbete/IMS/IMS_Frontend/App/app/src/main/res/layout/activity_main.xml" value="0.35260416666666666" />
         <entry key="..\:/Users/micke/Skolarbete/IMS/IMS_Frontend/App/app/src/main/res/layout/fragment_connect.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/micke/Skolarbete/IMS/IMS_Frontend/App/app/src/main/res/layout/fragment_control.xml" value="0.36666666666666664" />
@@ -13,8 +15,7 @@
       </map>
     </option>
   </component>
-  <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
