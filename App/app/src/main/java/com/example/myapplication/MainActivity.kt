@@ -43,7 +43,7 @@ object PermissionsBasedOnSDKVersion {
 }
 
 class MainActivity : AppCompatActivity() {
-    private val moverMacAddress: String = "E4:5F:01:92:65:7E"
+    private val moverMacAddress: String = "B8:27:EB:21:8A:D4"
     private val moverUuId: String = "7be1fcb3-5776-42fb-91fd-2ee7b5bbb86d"
     var btConnectionThread: BtConnectThread? = null;
 
