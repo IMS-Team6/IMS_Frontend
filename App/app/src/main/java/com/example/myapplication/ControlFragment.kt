@@ -14,21 +14,16 @@ class ControlFragment : Fragment(R.layout.fragment_control) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val btConnectionThread = (activity as MainActivity).btConnectionThread;
-
-        if(btConnectionThread != null && btConnectionThread.isConnected()) {
-            bluetoothConnectText.setText(R.string.bluetoothConnected);
-            Log.i("Bluetooth", "Bluetooth Connected!")
-        } else {
-            bluetoothConnectText.setText(R.string.bluetoothNotConnected);
-            Log.i("Bluetooth", "Bluetooth not connected!");
-        }
-
         controlSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
                 (activity as MainActivity?)?.writeData(8); // Auto
             else
-                (activity as MainActivity?)?.writeData(9); // Manuel
+                (activity as MainActivity?)?.writeData(9); // Manual
+
+            controlUp.isEnabled = !isChecked;
+            controlLeft.isEnabled = !isChecked;
+            controlRight.isEnabled = !isChecked;
+            controlDown.isEnabled = !isChecked;
         }
 
 
@@ -43,13 +38,13 @@ class ControlFragment : Fragment(R.layout.fragment_control) {
             false
         }
 
-        controlLeft.setOnTouchListener { _, event ->              //Left
+        controlLeft.setOnTouchListener { view, event ->              //Left
             if (event.action == MotionEvent.ACTION_DOWN) {
                 (activity as MainActivity?)?.writeData(2);
             } else if (event.action == MotionEvent.ACTION_UP) {
                 (activity as MainActivity?)?.writeData(0);
             }
-            false
+             false
         }
 
         controlRight.setOnTouchListener { _, event ->              //Right

@@ -6,11 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".ConnectFragment">
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="49dp"
+        android:layout_height="49dp"
+        android:drawableTint="@color/teal_200"
+        android:src="@drawable/rb_connected"
+        app:layout_constraintBottom_toTopOf="@+id/connectFragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+         />
+
     <TextView
         android:id="@+id/connectFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Connect Fragment"
+        android:textColorHint="#001DFF"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,14 +40,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/connectFragment" />
-
-    <Button
-        android:id="@+id/FindBluetoothDevices"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Find bluetooth devices"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bluetoothConnectButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
