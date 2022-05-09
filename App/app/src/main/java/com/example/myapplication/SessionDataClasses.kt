@@ -6,8 +6,8 @@ data class Session(
     val _id: String,
     val sessionID: String,
     val robotState: String,
-    val positions: Map<String, Positions> = mapOf(),
     val collision: java.lang.Boolean,
+    val positions: Map<String, Positions> = mapOf(),
     val collisionPos: Map<String, CollisionPos> = mapOf()
 )
 

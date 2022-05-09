@@ -25,20 +25,16 @@ class MapHistoryFragment : Fragment() {
     private lateinit var viewOfLayout: View
     private lateinit var client: OkHttpClient
 
-    private val BASE_URL: String = "http://3.72.195.76/api/"
+    private val baseURL: String = "http://3.72.195.76/api/"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewOfLayout = inflater.inflate(R.layout.fragment_map_history, container, false)
-
-        // Setup history map.
-        val historyGraph: GraphView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
-        historyGraph.viewTreeObserver.addOnGlobalLayoutListener(GetMapLocation())
 
         // Create OkHttp Client.
         client = OkHttpClient()
 
         // Fetch mover sessions from backend API.
-        fetchSessions(BASE_URL + "sessions")
+        fetchSessions(baseURL + "sessions")
 
         return viewOfLayout
     }
@@ -58,13 +54,34 @@ class MapHistoryFragment : Fragment() {
                 val selectedItem = parent?.getItemAtPosition(position)
                 Log.d("SPINNER", "$selectedItem selected!")
 
-                fetchSession(BASE_URL + "session/" + selectedItem.toString())
+                fetchSession(baseURL + "session/" + selectedItem.toString())
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 Log.d("Spinner", "Nothing!")
             }
         }
+    }
+
+    private fun convertToDataPoints(xValues: String, yValues: String): List<DataPoint>? {
+
+        if (xValues.isEmpty() || yValues.isEmpty()) {
+            return null
+        }
+
+        val dataPoints = mutableListOf<DataPoint>()
+
+        // Format strings by removing whitespaces, commas and brackets.
+        val formatX = xValues.replace("[", "").replace(" ", ""). replace("]", "").split(",")
+        val formatY = xValues.replace("[", "").replace(" ", ""). replace("]", "").split(",")
+        Log.d("formatX", formatX.toString())
+        Log.d("formatY", formatY.toString())
+
+        // TODO: Format create DataPoint with x and y values and append to dataPoints...
+
+        Log.d("DataPoints", dataPoints.size.toString())
+
+        return dataPoints
     }
 
     private fun fetchSession(sUrl: String) {
@@ -78,13 +95,15 @@ class MapHistoryFragment : Fragment() {
                         val session = mapper.parse<Session>(result)
 
                         if (session != null) {
-                            val positions = session.positions
-                            val collisions = session.collisionPos
+                            // Convert position data to strings
+                            val posX = session.positions["posX"].toString()
+                            val posY = session.positions["posY"].toString()
 
-                            Log.d("session", positions.toString())
-                            Log.d("session", collisions.toString())
+                            convertToDataPoints(posX, posY)
 
-                            // TODO: Draw positions on map.
+                            // Setup history map.
+                            val historyGraph: GraphView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
+                            //historyGraph.viewTreeObserver.addOnGlobalLayoutListener(GetMapLocation(positions, collisions))
 
                         } else {
                             Log.d("ERROR", "Could not parse session object!")
@@ -152,7 +171,10 @@ class MapHistoryFragment : Fragment() {
         return result
     }
 
-    internal inner class GetMapLocation() : ViewTreeObserver.OnGlobalLayoutListener {
+    internal inner class GetMapLocation(positions: List<DataPoint>, collisions: List<DataPoint>) : ViewTreeObserver.OnGlobalLayoutListener {
+
+        val moverPositions: List<DataPoint> = positions
+        val moverCollisions: List<DataPoint> = collisions
 
         override fun onGlobalLayout() {
             val graphTitle: TextView = viewOfLayout.findViewById((R.id.mapHistoryTitle))
