@@ -1,0 +1,44 @@
+<Mikael Mohlin - Week 18>
+
+2/5
+We had a sprint planning meeting with the entire group. Our goals for this sprint was to be able to send control commands from the app to the mover and
+the testing of this functionality was planned to be done on thursday this week. From our group (android app) we had one person that would finalize the last
+steps in order to make the bluetooth data stream work.
+But, there were still more tasks on our application that had to be done and since not everyone from our sub-group could attend this sprint planning meeting, we had 
+to plan our next meeting on the next day instead.
+(~2 hours)
+
+3/5
+A meeting was held with the android group with intention to review our remaining tasks and how we would divide them. The current tasks we could identify were: 
+- Fetch data fom backend to display path travelled from the mover on the app.
+- Send data (move commands) to mover via bluetooth.
+- Design the UI in the app after the finished UX design.
+- Show some sort of connection status when connected/disconnected to the mover.
+These were the tasks we identified and for the most part, we managed to divide these tasks to each individual from our group.
+My task was to work on the firstly mentioned task, fetching mover position data from backend and display them in a map/graph on the app.
+(~2 hours)
+
+4/5
+I started working on the MapHistoryFragment where I should retrieve data from backend to later display on the app.
+For starters I had to check what type of request I had to do in order to fetch the desired data. There were some libraries I had to import in order to make
+the app able to send requests to/from API´s.
+After a while I finally managed to fetch a list of sessions from the backend and print the result in the console. So, now the app can receive a list of different
+mover sessions.
+(~3 hours)
+
+5/5
+This day I continued working on sessions. The next task was to take the list of sessions and make them displayable and choosable in a dropdown (spinner) item.
+The overall plan of this functionality is that the user should be able to change between different sessions, so that the user can see the coordinates drawn out
+on the map from a specific sessions.
+And after a couple of hours I managed to make the dropdown item display each session entity instead which was the initial plan.
+(~4 hours)
+
+6/5
+I continued working with the task of displaying mover sessions.
+There were a few minor tasks i managed to complete this day, which were:
+- A on click listener on the dropdown menu, so that something would happen when the user select one desired session.
+- Fetching a session with a specific id, selected from the dropdown menu.
+- Parsing the session data from the API to a session class on the app, so that it can be used to later draw the coordinated on the map/graph.
+(~8 hours)
+
+Total time spent: ~19 hours
