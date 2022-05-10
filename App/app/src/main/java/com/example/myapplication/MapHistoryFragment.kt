@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.lifecycle.lifecycleScope
-import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +23,9 @@ import java.util.*
 class MapHistoryFragment : Fragment() {
     private lateinit var viewOfLayout: View
     private lateinit var client: OkHttpClient
+    private lateinit var getMapLocation: GetMapLocation
+    private var positions = mutableListOf<DataPoint>()
+    private var collisions = mutableListOf<DataPoint>()
 
     private val baseURL: String = "http://3.72.195.76/api/"
 
@@ -32,6 +34,9 @@ class MapHistoryFragment : Fragment() {
 
         // Create OkHttp Client.
         client = OkHttpClient()
+
+        // Setup history map.
+        getMapLocation = GetMapLocation(mutableListOf(), mutableListOf())
 
         // Fetch mover sessions from backend API.
         fetchSessions(baseURL + "sessions")
@@ -63,23 +68,35 @@ class MapHistoryFragment : Fragment() {
         }
     }
 
-    private fun convertToDataPoints(xValues: String, yValues: String): List<DataPoint>? {
+    private fun stringToList(str: String): List<String> {
+        val removeWhiteSpaces = str.replace(" ", "")
+        val formatString = removeWhiteSpaces.substring(1, removeWhiteSpaces.length-1).split(",")
+        return formatString.toList()
+    }
+
+    private fun convertToDataPoints(xValues: String, yValues: String): MutableList<DataPoint> {
+        var dataPoints = mutableListOf<DataPoint>()
 
         if (xValues.isEmpty() || yValues.isEmpty()) {
-            return null
+            return dataPoints
         }
 
-        val dataPoints = mutableListOf<DataPoint>()
-
         // Format strings by removing whitespaces, commas and brackets.
-        val formatX = xValues.replace("[", "").replace(" ", ""). replace("]", "").split(",")
-        val formatY = xValues.replace("[", "").replace(" ", ""). replace("]", "").split(",")
-        Log.d("formatX", formatX.toString())
-        Log.d("formatY", formatY.toString())
+        val formatX = stringToList(xValues)
+        val formatY = stringToList(yValues)
 
-        // TODO: Format create DataPoint with x and y values and append to dataPoints...
+        if (formatX.size != formatY.size || formatX.size <= 1 || formatY.size <= 1) {
+            return dataPoints
+        }
 
-        Log.d("DataPoints", dataPoints.size.toString())
+        val listSize = formatX.size - 1
+
+        for (i in 0..listSize) {
+            val x = formatX[i].toInt()
+            val y = formatY[i].toInt()
+            val dataPoint = DataPoint(x, y)
+            dataPoints.add(dataPoint)
+        }
 
         return dataPoints
     }
@@ -99,16 +116,27 @@ class MapHistoryFragment : Fragment() {
                             val posX = session.positions["posX"].toString()
                             val posY = session.positions["posY"].toString()
 
-                            convertToDataPoints(posX, posY)
+                            // Convert collision data to strings
+                            val collX = session.collisionPos["collX"].toString()
+                            val collY = session.collisionPos["collY"].toString()
 
-                            // Setup history map.
+                            // Convert collision and position data to list of DataPoints
+                            Log.d("fetchSession", "Converting...")
+                            positions = convertToDataPoints(posX, posY)
+                            collisions = convertToDataPoints(collX, collY)
+
+                            // TODO: Make these line synchronous!
+                            // Change data values on MapLayout
+                            Log.d("fetchSession", "Changing...")
+                            getMapLocation.moverPositions = positions
+                            getMapLocation.moverCollisions = collisions
+
                             val historyGraph: GraphView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
-                            //historyGraph.viewTreeObserver.addOnGlobalLayoutListener(GetMapLocation(positions, collisions))
+                            historyGraph.viewTreeObserver.addOnGlobalLayoutListener(getMapLocation)
 
                         } else {
                             Log.d("ERROR", "Could not parse session object!")
                         }
-
                     }
                 }
                 catch (error: java.lang.Error) {
@@ -171,32 +199,36 @@ class MapHistoryFragment : Fragment() {
         return result
     }
 
-    internal inner class GetMapLocation(positions: List<DataPoint>, collisions: List<DataPoint>) : ViewTreeObserver.OnGlobalLayoutListener {
+    internal inner class GetMapLocation(positions: MutableList<DataPoint>, collisions: MutableList<DataPoint>) : ViewTreeObserver.OnGlobalLayoutListener {
 
-        val moverPositions: List<DataPoint> = positions
-        val moverCollisions: List<DataPoint> = collisions
+        var moverPositions: List<DataPoint> = positions
+        var moverCollisions: List<DataPoint> = collisions
+
+        init {
+            Log.d("MAP", "Init MAP! ${moverPositions.size}")
+        }
 
         override fun onGlobalLayout() {
+            Log.d("MAP", "Changing map state...")
             val graphTitle: TextView = viewOfLayout.findViewById((R.id.mapHistoryTitle))
             val mapView: GraphView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
 
             // Create a rectangle that represent the map boundaries.
             val mapRect = Rect(mapView.left, (mapView.top - graphTitle.height), mapView.right, (mapView.bottom - graphTitle.height))
 
-            // Generate random dummy data points to be rendered on map.
-            val random = Random()
             val myList = mutableListOf<DataPoint>()
 
-            for (i in 0..10) {
-                val x = random.nextInt(300) + mapRect.centerX()
-                val y = random.nextInt(500) + mapRect.centerY()
-
-                val randomDataPoint = DataPoint(x, y)
-                myList.add(randomDataPoint)
+            if (moverPositions.isNotEmpty()) {
+                moverPositions.forEach {
+                    val adjustX = mapRect.centerX() + it.xVal
+                    val adjustY = mapRect.centerY() + it.yVal
+                    myList.add(DataPoint(adjustX, adjustY))
+                }
+            } else {
+                Toast.makeText(activity, "Session does not contain any position data.", Toast.LENGTH_SHORT).show()
             }
 
             mapView.setData(myList)
         }
     }
-
 }
