@@ -160,6 +160,7 @@ class MapHistoryFragment : Fragment() {
         }
 
         if (collisions.isNotEmpty()) {
+            // Draw out collisions on map, if there exists any.
             for (col in collisions) {
                 // Format coordinates so that (0,0) is positioned at center of the map instead of top left corner.
                 // Format coordinates to that the x and y values gets scaled to the value of the scale constant.

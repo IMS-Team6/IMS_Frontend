@@ -14,3 +14,5 @@ data class Session(
 data class Positions(val posX: List<String>, val posY: List<String>)
 
 data class CollisionPos(val colX: List<String>, val colY: List<String>)
+
+data class DataPoint(val xVal: Int, val yVal: Int)
