@@ -1,14 +1,17 @@
 package com.example.myapplication
 
-import android.graphics.Rect
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity.apply
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
+import androidx.core.view.GravityCompat.apply
 import androidx.lifecycle.lifecycleScope
 import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.Dispatchers
@@ -23,9 +26,10 @@ import java.util.*
 class MapHistoryFragment : Fragment() {
     private lateinit var viewOfLayout: View
     private lateinit var client: OkHttpClient
-    private lateinit var getMapLocation: GetMapLocation
-    private var positions = mutableListOf<DataPoint>()
-    private var collisions = mutableListOf<DataPoint>()
+
+    private lateinit var graphTitle: TextView
+    private lateinit var mapView: ImageView
+    private lateinit var mapCanvas: MapCanvas
 
     private val baseURL: String = "http://3.72.195.76/api/"
 
@@ -36,7 +40,8 @@ class MapHistoryFragment : Fragment() {
         client = OkHttpClient()
 
         // Setup history map.
-        getMapLocation = GetMapLocation(mutableListOf(), mutableListOf())
+        graphTitle = viewOfLayout.findViewById((R.id.sessionText))
+        mapView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
 
         // Fetch mover sessions from backend API.
         fetchSessions(baseURL + "sessions")
@@ -101,6 +106,72 @@ class MapHistoryFragment : Fragment() {
         return dataPoints
     }
 
+    private fun drawOnCanvas(positions: MutableList<DataPoint>, collisions: MutableList<DataPoint>) {
+        // Create a rectangle that represent the map boundaries.
+        val mapRect = Rect(mapView.left, mapView.top, mapView.right, mapView.bottom)
+
+        // Create canvas and bitmap.
+        val bitmap = Bitmap.createBitmap(mapRect.width(), mapRect.height(), Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        val scaleConstant = 50
+
+        val blackDot =
+            Paint().apply {
+                isAntiAlias = true
+                color = Color.BLACK
+                style = Paint.Style.FILL
+            }
+
+        val blackLine =
+            Paint().apply {
+                isAntiAlias = true
+                color = Color.BLACK
+                style = Paint.Style.STROKE
+                strokeWidth = 5f
+            }
+
+        val redDot =
+            Paint().apply {
+                isAntiAlias = true
+                color = Color.RED
+                style = Paint.Style.FILL
+            }
+
+        if (positions.isNotEmpty()) {
+            var previousDataPoint: DataPoint? = null
+
+            for (pos in positions) {
+                // Format coordinates so that (0,0) is positioned at center of the map instead of top left corner.
+                // Format coordinates to that the x and y values gets scaled to the value of the scale constant.
+                val formatX = mapRect.centerX() + (pos.xVal * scaleConstant)
+                val formatY = mapRect.centerY() + (pos.yVal * scaleConstant)
+
+                if (previousDataPoint != null) {
+                    // Draw line between the current and the previous data point.
+                    canvas.drawLine(previousDataPoint.xVal.toFloat(), previousDataPoint.yVal.toFloat(), formatX.toFloat(), formatY.toFloat(), blackLine)
+                }
+                previousDataPoint = DataPoint(formatX, formatY)
+
+                canvas.drawCircle(formatX.toFloat(), formatY.toFloat(), 10f, blackDot)
+            }
+        } else {
+            Toast.makeText(activity, "No position data found on this session", Toast.LENGTH_SHORT).show()
+        }
+
+        if (collisions.isNotEmpty()) {
+            for (col in collisions) {
+                // Format coordinates so that (0,0) is positioned at center of the map instead of top left corner.
+                // Format coordinates to that the x and y values gets scaled to the value of the scale constant.
+                val formatX = mapRect.centerX() + (col.xVal * scaleConstant)
+                val formatY = mapRect.centerY() + (col.yVal * scaleConstant)
+                canvas.drawCircle(formatX.toFloat(), formatY.toFloat(), 10f, redDot)
+            }
+        }
+
+        mapView.background = BitmapDrawable(resources, bitmap)
+    }
+
     private fun fetchSession(sUrl: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             val result = getRequest(sUrl)
@@ -121,19 +192,10 @@ class MapHistoryFragment : Fragment() {
                             val collY = session.collisionPos["collY"].toString()
 
                             // Convert collision and position data to list of DataPoints
-                            Log.d("fetchSession", "Converting...")
-                            positions = convertToDataPoints(posX, posY)
-                            collisions = convertToDataPoints(collX, collY)
+                            val positions = convertToDataPoints(posX, posY)
+                            val collisions = convertToDataPoints(collX, collY)
 
-                            // TODO: Make these line synchronous!
-                            // Change data values on MapLayout
-                            Log.d("fetchSession", "Changing...")
-                            getMapLocation.moverPositions = positions
-                            getMapLocation.moverCollisions = collisions
-
-                            val historyGraph: GraphView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
-                            historyGraph.viewTreeObserver.addOnGlobalLayoutListener(getMapLocation)
-
+                            drawOnCanvas(positions, collisions)
                         } else {
                             Log.d("ERROR", "Could not parse session object!")
                         }
@@ -198,37 +260,6 @@ class MapHistoryFragment : Fragment() {
 
         return result
     }
-
-    internal inner class GetMapLocation(positions: MutableList<DataPoint>, collisions: MutableList<DataPoint>) : ViewTreeObserver.OnGlobalLayoutListener {
-
-        var moverPositions: List<DataPoint> = positions
-        var moverCollisions: List<DataPoint> = collisions
-
-        init {
-            Log.d("MAP", "Init MAP! ${moverPositions.size}")
-        }
-
-        override fun onGlobalLayout() {
-            Log.d("MAP", "Changing map state...")
-            val graphTitle: TextView = viewOfLayout.findViewById((R.id.mapHistoryTitle))
-            val mapView: GraphView = viewOfLayout.findViewById(R.id.mapHistoryGraph)
-
-            // Create a rectangle that represent the map boundaries.
-            val mapRect = Rect(mapView.left, (mapView.top - graphTitle.height), mapView.right, (mapView.bottom - graphTitle.height))
-
-            val myList = mutableListOf<DataPoint>()
-
-            if (moverPositions.isNotEmpty()) {
-                moverPositions.forEach {
-                    val adjustX = mapRect.centerX() + it.xVal
-                    val adjustY = mapRect.centerY() + it.yVal
-                    myList.add(DataPoint(adjustX, adjustY))
-                }
-            } else {
-                Toast.makeText(activity, "Session does not contain any position data.", Toast.LENGTH_SHORT).show()
-            }
-
-            mapView.setData(myList)
-        }
-    }
 }
+
+
