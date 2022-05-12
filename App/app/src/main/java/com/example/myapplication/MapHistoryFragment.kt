@@ -116,6 +116,8 @@ class MapHistoryFragment : Fragment() {
 
         val scaleConstant = 50
 
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR) // Reset canvas from previous map drawing
+
         val blackDot =
             Paint().apply {
                 isAntiAlias = true
