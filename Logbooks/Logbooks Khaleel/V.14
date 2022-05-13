@@ -1,0 +1,27 @@
+1/4: Me and my group (Frontend) had a meeting regarding the project. We had a long discussion about how we will set up the project and how we are going to divide the requirements into smaller tasks. We discussed how the application is going to be connected with the mower and the backend, what data we will send to the mower and what data we will receive from the backend.
+  Hours: 3 hours
+ 
+5/4
+We had a meeting with the big group (all members) and talked about how we are going to store the code for these different groups (Backend, Frontend, Hardwere).
+We decided to use github and create an organisation and inside it we created three separate repositories.
+Spend time on watching the provided Videos on canvas.
+ Hours: 3 hours
+ 
+ 
+ 
+6/4
+We had decided to work with Android studio and therefore I did some research on Kotlin and did basic code just to get used to it. I created a basic todo app in kotlin with help from a tutorial.
+We had a meeting (frontend) where we talked about dividing the problems into smaller tasks so that it would be easier for us to solve.
+I created a mockup in draw.io on how our application should look like, each fragment had its own design with buttons and text. It was basic UX and everyone understood it. It made it easier for us to understand how the complete application is going to look like.
+We created a repository where everyone could join and push code/logbook and todo.
+Hours: 3 hours
+ 
+7/4
+I did my own research on kotlin and spent time on watching youtube on how you use Android studio and how you build a project from scratch. While following the youtube tutorials I realised that i got errors because of different versions of android/Kotlin so i had to solve those errors by myself.
+Fragment was a thing that i spend most time on because it was important in our project.
+Hours: 4 hours
+
+8/4
+We had standup meeting and discussed each others plan of doing the tasks and how we will communicate with each other. There wasn't any code presentation.
+After the standup meeting we in front end group had a meeting and talked about how we will put up our project and how we will distribute the tasks. We discussed different ways to do it in.
+Hours: 4 hours
