@@ -1,0 +1,20 @@
+20/4
+A meeting with the full group was held in discord with motive to get an update on how all groups were doing on the project.
+Dis group (Hardware) finished the bluetooth setup and the connection and was waiting for me to get done with the BLE connection. 
+The Back end has some problems with the API and has not solved their problems yet.
+I explained for the group what problems I had with the permissions and why it was hard to solve those problems.
+After the meeting I worked with bluetooth. 
+Hours: 6 hours
+
+21/4
+Till now I have created 3 seperate projects about bluetooth for testing if the problem is in our project settings or in my code.
+At the end of day i managed to solve the permission problem and after that it was easier to continue, i created a view where all available 
+bluetooth devices showed up. A button was also Created to connect to a specific UUID address (mower address was the target) but since i wasn't able to
+go to the school and test my code on the mower/Raspberry Pi i had to find a device that was supporting BLE connection to test my code on. I contacted 
+the DIS group and told them that the code was done and if they could test it one the  Raspberry Pi so that I know if the code works as it should. 
+The logic in the code was right and it should work but we haven't tested it yet.
+Hours: 8-9 hours
+
+22/4
+Watched lecture from the guest
+Hours: 2 hours
