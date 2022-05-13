@@ -1,0 +1,27 @@
+11/4 
+The group meeting went well today and we had long conversations about the goals we had. All three mini groups presented their sub-goals, 
+we in the front-end had a sub goal to set up and establish connection with the mower.
+The backend worked with the setting up of the API. And Hardware worked with bluetooth functionality on the mower.
+The rest of the day I spend time exploring more in kotlin and implementing basic code and running the simulator to see it live as an application. 
+Hours: 4 hours
+12/4
+I had a meeting with a front-end group where we talked about user story from the project in detail. And each member in the group was assigned one of the user storyto work on. 
+I finished creating foar fragments (Connect, Control, Map,Image) where every one in the group will be able to work on separate fragment without mixing code with others.
+
+Hours: 4 hours
+
+
+
+
+13/4 
+With the group we had decided that I will take the bluetooth fragment to work on. I had contact with the hardware regarding what bluetooth data they want to
+receive and which bluetooth. They worked with BLE bluetooth so bothe my research and code was based on that. It was hard to find documentation about BLE and it
+took a long time to get started with that. A Lot of errors was hard to solve.
+Hours: 5 hours 
+
+
+14/4
+ I followed some tutorials and implemented the code but the errors was to many and a big reason for that was that the code was in JAVA and i used kotlin and even
+ when i translated it to kotlin some errors was left because of newer version of kotlin.
+
+Hours: 5 hours 
