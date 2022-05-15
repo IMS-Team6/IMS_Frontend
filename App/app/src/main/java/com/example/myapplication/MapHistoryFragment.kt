@@ -166,28 +166,6 @@ class MapHistoryFragment : Fragment() {
             val scaleConstant = getScaleConstant(mapRect)
             Log.d("res", "Result: $scaleConstant")
 
-            val blackDot =
-                Paint().apply {
-                    isAntiAlias = true
-                    color = Color.BLACK
-                    style = Paint.Style.FILL
-                }
-
-            val blackLine =
-                Paint().apply {
-                    isAntiAlias = true
-                    color = Color.BLACK
-                    style = Paint.Style.STROKE
-                    strokeWidth = 5f
-                }
-
-            val redDot =
-                Paint().apply {
-                    isAntiAlias = true
-                    color = Color.RED
-                    style = Paint.Style.FILL
-                }
-
             var previousDataPoint: DataPoint? = null
 
             for (pos in positions) {
