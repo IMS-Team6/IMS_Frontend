@@ -31,6 +31,11 @@ class MapHistoryFragment : Fragment() {
     private lateinit var mapView: ImageView
     private lateinit var mapCanvas: MapCanvas
 
+    private var xValMax: Int = 0
+    private var xValMin: Int = 0
+    private var yValMax: Int = 0
+    private var yValMin: Int = 0
+
     private val baseURL: String = "http://3.72.195.76/api/"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -99,11 +104,52 @@ class MapHistoryFragment : Fragment() {
         for (i in 0..listSize) {
             val x = formatX[i].toInt()
             val y = formatY[i].toInt()
+
+            // Check if current x and y values are bigger/smaller than the current max and min values for x and y.
+            checkXValues(x)
+            checkYValues(y)
+
             val dataPoint = DataPoint(x, y)
             dataPoints.add(dataPoint)
         }
 
         return dataPoints
+    }
+
+    private fun checkXValues(x: Int) {
+        if (xValMax < x) {
+            xValMax = x
+        } else if (x < xValMin) {
+            xValMin = x
+        }
+    }
+
+    private fun checkYValues(y: Int) {
+        if (yValMax < y) {
+            yValMax = y
+        } else if (y < yValMin) {
+            yValMin = y
+        }
+    }
+
+    private fun getScaleConstant(rect: Rect): Int {
+        for (n in 50 downTo 2) {
+            Log.d("scaleConstant", n.toString())
+
+            // Add min values to a datapoint
+            val xMin = rect.centerX() + (xValMin * n)
+            val yMin = rect.centerY() + (yValMin * n)
+
+            // Add max values to a datapoint
+            val xMax = rect.centerX() + (xValMax * n)
+            val yMax = rect.centerY() + (yValMax * n)
+
+            if (rect.contains(xMin, yMin) && rect.contains(xMax, yMax)) {
+                return n
+            }
+        }
+
+        return 1
     }
 
     private fun drawOnCanvas(positions: MutableList<DataPoint>, collisions: MutableList<DataPoint>) {
@@ -114,33 +160,34 @@ class MapHistoryFragment : Fragment() {
         val bitmap = Bitmap.createBitmap(mapRect.width(), mapRect.height(), Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
-        val scaleConstant = 50
-
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR) // Reset canvas from previous map drawing
 
-        val blackDot =
-            Paint().apply {
-                isAntiAlias = true
-                color = Color.BLACK
-                style = Paint.Style.FILL
-            }
-
-        val blackLine =
-            Paint().apply {
-                isAntiAlias = true
-                color = Color.BLACK
-                style = Paint.Style.STROKE
-                strokeWidth = 5f
-            }
-
-        val redDot =
-            Paint().apply {
-                isAntiAlias = true
-                color = Color.RED
-                style = Paint.Style.FILL
-            }
-
         if (positions.isNotEmpty()) {
+            val scaleConstant = getScaleConstant(mapRect)
+            Log.d("res", "Result: $scaleConstant")
+
+            val blackDot =
+                Paint().apply {
+                    isAntiAlias = true
+                    color = Color.BLACK
+                    style = Paint.Style.FILL
+                }
+
+            val blackLine =
+                Paint().apply {
+                    isAntiAlias = true
+                    color = Color.BLACK
+                    style = Paint.Style.STROKE
+                    strokeWidth = 5f
+                }
+
+            val redDot =
+                Paint().apply {
+                    isAntiAlias = true
+                    color = Color.RED
+                    style = Paint.Style.FILL
+                }
+
             var previousDataPoint: DataPoint? = null
 
             for (pos in positions) {
@@ -157,19 +204,20 @@ class MapHistoryFragment : Fragment() {
 
                 canvas.drawCircle(formatX.toFloat(), formatY.toFloat(), 10f, blackDot)
             }
-        } else {
-            Toast.makeText(activity, "No position data found on this session", Toast.LENGTH_SHORT).show()
-        }
 
-        if (collisions.isNotEmpty()) {
-            // Draw out collisions on map, if there exists any.
-            for (col in collisions) {
-                // Format coordinates so that (0,0) is positioned at center of the map instead of top left corner.
-                // Format coordinates to that the x and y values gets scaled to the value of the scale constant.
-                val formatX = mapRect.centerX() + (col.xVal * scaleConstant)
-                val formatY = mapRect.centerY() + (col.yVal * scaleConstant)
-                canvas.drawCircle(formatX.toFloat(), formatY.toFloat(), 10f, redDot)
+
+            if (collisions.isNotEmpty()) {
+                // Draw out collisions on map, if there exists any.
+                for (col in collisions) {
+                    // Format coordinates so that (0,0) is positioned at center of the map instead of top left corner.
+                    // Format coordinates to that the x and y values gets scaled to the value of the scale constant.
+                    val formatX = mapRect.centerX() + (col.xVal * scaleConstant)
+                    val formatY = mapRect.centerY() + (col.yVal * scaleConstant)
+                    canvas.drawCircle(formatX.toFloat(), formatY.toFloat(), 10f, redDot)
+                }
             }
+        } else {
+            Toast.makeText(activity, "No position data to draw on the selected session session", Toast.LENGTH_SHORT).show()
         }
 
         mapView.background = BitmapDrawable(resources, bitmap)
