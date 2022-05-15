@@ -29,7 +29,6 @@ class MapHistoryFragment : Fragment() {
 
     private lateinit var graphTitle: TextView
     private lateinit var mapView: ImageView
-    private lateinit var mapCanvas: MapCanvas
 
     private var xValMax: Int = 0
     private var xValMin: Int = 0
@@ -133,9 +132,8 @@ class MapHistoryFragment : Fragment() {
     }
 
     private fun getScaleConstant(rect: Rect): Int {
+        // Checks and returns the maximum value of the scale constant 'n' that fits into the given rectangle, which in turn represent the boundaries of the map.
         for (n in 50 downTo 2) {
-            Log.d("scaleConstant", n.toString())
-
             // Add min values to a datapoint
             val xMin = rect.centerX() + (xValMin * n)
             val yMin = rect.centerY() + (yValMin * n)
@@ -149,7 +147,7 @@ class MapHistoryFragment : Fragment() {
             }
         }
 
-        return 1
+        return 1 // Lowest value of the scale constant
     }
 
     private fun drawOnCanvas(positions: MutableList<DataPoint>, collisions: MutableList<DataPoint>) {
@@ -164,7 +162,6 @@ class MapHistoryFragment : Fragment() {
 
         if (positions.isNotEmpty()) {
             val scaleConstant = getScaleConstant(mapRect)
-            Log.d("res", "Result: $scaleConstant")
 
             var previousDataPoint: DataPoint? = null
 
