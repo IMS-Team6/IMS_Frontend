@@ -24,3 +24,10 @@ val redDot =
         color = Color.RED
         style = Paint.Style.FILL
     }
+
+val greenDot =
+    Paint().apply {
+        isAntiAlias = true
+        color = Color.GREEN
+        style = Paint.Style.FILL
+    }

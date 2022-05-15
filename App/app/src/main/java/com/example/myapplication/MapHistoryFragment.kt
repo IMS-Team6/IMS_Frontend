@@ -105,8 +105,8 @@ class MapHistoryFragment : Fragment() {
             val y = formatY[i].toInt()
 
             // Check if current x and y values are bigger/smaller than the current max and min values for x and y.
-            checkXValues(x)
-            checkYValues(y)
+            checkIfMaxMinX(x)
+            checkIfMaxMinY(y)
 
             val dataPoint = DataPoint(x, y)
             dataPoints.add(dataPoint)
@@ -115,7 +115,7 @@ class MapHistoryFragment : Fragment() {
         return dataPoints
     }
 
-    private fun checkXValues(x: Int) {
+    private fun checkIfMaxMinX(x: Int) {
         if (xValMax < x) {
             xValMax = x
         } else if (x < xValMin) {
@@ -123,7 +123,7 @@ class MapHistoryFragment : Fragment() {
         }
     }
 
-    private fun checkYValues(y: Int) {
+    private fun checkIfMaxMinY(y: Int) {
         if (yValMax < y) {
             yValMax = y
         } else if (y < yValMin) {
@@ -132,8 +132,10 @@ class MapHistoryFragment : Fragment() {
     }
 
     private fun getScaleConstant(rect: Rect): Int {
+        val maxScaleConstant = 100
+
         // Checks and returns the maximum value of the scale constant 'n' that fits into the given rectangle, which in turn represent the boundaries of the map.
-        for (n in 50 downTo 2) {
+        for (n in maxScaleConstant downTo 2) {
             // Add min values to a datapoint
             val xMin = rect.centerX() + (xValMin * n)
             val yMin = rect.centerY() + (yValMin * n)
@@ -174,10 +176,16 @@ class MapHistoryFragment : Fragment() {
                 if (previousDataPoint != null) {
                     // Draw line between the current and the previous data point.
                     canvas.drawLine(previousDataPoint.xVal.toFloat(), previousDataPoint.yVal.toFloat(), formatX.toFloat(), formatY.toFloat(), blackLine)
-                }
-                previousDataPoint = DataPoint(formatX, formatY)
 
-                canvas.drawCircle(formatX.toFloat(), formatY.toFloat(), 10f, blackDot)
+                    // Draw current datapoint from list
+                    previousDataPoint = DataPoint(formatX, formatY)
+                    canvas.drawCircle(formatX.toFloat(), formatY.toFloat(), 10f, blackDot)
+                } else {
+                    // First datapoint from list --> Assign it as previous data point and draw a green dot which represent start point of mover.
+                    previousDataPoint = DataPoint(formatX, formatY)
+                    canvas.drawCircle(formatX.toFloat(), formatY.toFloat(), 10f, greenDot)
+                }
+
             }
 
 
