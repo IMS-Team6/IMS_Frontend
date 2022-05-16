@@ -117,7 +117,6 @@ class MainActivity : AppCompatActivity() {
                         Log.d("bluetooth", "connected?")
                     }
                     //getPairedDevices(bluetoothAdapter)
-
                 }
             }
         }

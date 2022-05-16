@@ -55,8 +55,13 @@ class MapHistoryFragment : Fragment() {
 
         // Setup button collision image button.
         showCollisionsButton = viewOfLayout.findViewById(R.id.showCollisionsBtn)
+
         showCollisionsButton.setOnClickListener {
-            Toast.makeText(activity, "SessionId: $selectedSessionId", Toast.LENGTH_SHORT).show()
+            if (selectedSessionId != "") {
+                fetchCollisionImages(baseURL + "collisionImg/" +  selectedSessionId)
+            } else {
+                Toast.makeText(activity, "No session id selected!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         return viewOfLayout
@@ -214,6 +219,41 @@ class MapHistoryFragment : Fragment() {
         mapView.background = BitmapDrawable(resources, bitmap)
     }
 
+    private fun fetchCollisionImages(sUrl: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val result = getRequest(sUrl)
+
+            if (result != null) {
+                try{
+                    withContext(Dispatchers.Main) {
+                        // Create parser for list of image names.
+                        val mapper = Klaxon()
+                        val collisionImageNames: List<CollisionInfo>? = mapper.parseArray(result)
+
+                        // TODO: Add check so that the app don't crash when response sends back empty list of images.
+
+                        // Create list of strings that will hold names of images.
+                        val imageNames = arrayListOf<String>()
+
+                        if (collisionImageNames != null) {
+                            for (name in collisionImageNames) {
+                                imageNames.add(name.imgName)
+                            }
+                        }
+
+                        Log.d("tag", "success! ${imageNames.size}")
+
+                    }
+                } catch (error: java.lang.Error) {
+                    Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Log.d("ERROR", "Request returned no response!")
+                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun fetchSession(sUrl: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             val result = getRequest(sUrl)
@@ -245,11 +285,11 @@ class MapHistoryFragment : Fragment() {
                 }
                 catch (error: java.lang.Error) {
                     Log.d("ERROR", error.toString())
-                    Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Log.d("ERROR", "Request returned no response!")
-                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show()
             }
         }
     }
