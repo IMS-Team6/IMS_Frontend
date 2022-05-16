@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ActionBar
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -37,6 +38,11 @@ object PermissionsBasedOnSDKVersion {
 
     var sdk30Permissions =arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.BLUETOOTH,
+        Manifest.permission.BLUETOOTH_ADMIN
+    )
+    var sdk28Permissions =arrayOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.BLUETOOTH,
         Manifest.permission.BLUETOOTH_ADMIN
     )
@@ -133,8 +139,15 @@ class MainActivity : AppCompatActivity() {
                     return  result;
             }
         }
-        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
             PermissionsBasedOnSDKVersion.sdk30Permissions.forEach {
+                result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+                if(!result)
+                    return  result;
+            }
+        }
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            PermissionsBasedOnSDKVersion.sdk28Permissions.forEach {
                 result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
                 if(!result)
                     return  result;
@@ -153,8 +166,11 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk31Permissions)
         }
-        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
             requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk30Permissions)
+        }
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk28Permissions)
         }
         else{
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
