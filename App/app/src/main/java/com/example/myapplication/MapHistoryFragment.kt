@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.core.view.GravityCompat.apply
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,6 +30,8 @@ class MapHistoryFragment : Fragment() {
 
     private lateinit var graphTitle: TextView
     private lateinit var mapView: ImageView
+    private lateinit var showCollisionsButton: Button
+    private var selectedSessionId: String = ""
 
     private var xValMax: Int = 0
     private var xValMin: Int = 0
@@ -50,6 +53,12 @@ class MapHistoryFragment : Fragment() {
         // Fetch mover sessions from backend API.
         fetchSessions(baseURL + "sessions")
 
+        // Setup button collision image button.
+        showCollisionsButton = viewOfLayout.findViewById(R.id.showCollisionsBtn)
+        showCollisionsButton.setOnClickListener {
+            Toast.makeText(activity, "SessionId: $selectedSessionId", Toast.LENGTH_SHORT).show()
+        }
+
         return viewOfLayout
     }
 
@@ -66,9 +75,8 @@ class MapHistoryFragment : Fragment() {
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedItem = parent?.getItemAtPosition(position)
-                Log.d("SPINNER", "$selectedItem selected!")
-
                 fetchSession(baseURL + "session/" + selectedItem.toString())
+                selectedSessionId = selectedItem.toString()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
