@@ -19,4 +19,4 @@ data class CollisionPos(val colX: List<String>, val colY: List<String>)
 data class DataPoint(val xVal: Int, val yVal: Int)
 
 // Data class that holds info of ids from existing collision images.
-data class CollisionInfo(val imgName: String)
+data class CollisionInfo(val sessionID: String, val imgName: String)

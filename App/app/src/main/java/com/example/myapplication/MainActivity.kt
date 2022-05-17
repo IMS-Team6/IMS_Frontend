@@ -47,11 +47,14 @@ class MainActivity : AppCompatActivity() {
     private val moverUuId: String = "7be1fcb3-5776-42fb-91fd-2ee7b5bbb86d"
     var btConnectionThread: BtConnectThread? = null;
 
+    private lateinit var collisionImageObjects: MutableList<CollisionInfo>
+
     private val receiver = object: BroadcastReceiver() {
         @SuppressLint("MissingPermission")
 
         override fun onReceive(context: Context, intent: Intent) {
             val action: String? = intent.action
+
             when(action) {
                 BluetoothDevice.ACTION_FOUND -> {
                     Log.d("bluetooth", "Device found!")
@@ -120,6 +123,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun getCollisionImageObjects(): List<CollisionInfo> {
+        return collisionImageObjects
+    }
+
+    fun updateCollisionImageObjects(colImgObjects: List<CollisionInfo>) {
+        collisionImageObjects = colImgObjects as MutableList<CollisionInfo>
     }
 
     private fun checkPermissions(): Boolean {

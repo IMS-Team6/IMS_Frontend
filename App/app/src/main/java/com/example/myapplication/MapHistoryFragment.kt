@@ -4,16 +4,12 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity.apply
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.*
-import androidx.core.view.GravityCompat.apply
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +17,6 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.net.URL
-import java.util.*
 
 
 class MapHistoryFragment : Fragment() {
@@ -65,7 +60,7 @@ class MapHistoryFragment : Fragment() {
                 Log.d("isCollision", isCollision.toString())
 
                 if (isCollision) {
-                    fetchCollisionImages(baseURL + "collisionImg/" +  selectedSessionId)
+                    fetchCollisionObjects(baseURL + "collisionImg/" +  selectedSessionId)
                 } else {
                     Toast.makeText(activity, "No collision images to display for this session.", Toast.LENGTH_SHORT).show()
                 }
@@ -241,7 +236,7 @@ class MapHistoryFragment : Fragment() {
         mapView.background = BitmapDrawable(resources, bitmap)
     }
 
-    private fun fetchCollisionImages(sUrl: String) {
+    private fun fetchCollisionObjects(sUrl: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             val result = getRequest(sUrl)
 
@@ -250,18 +245,19 @@ class MapHistoryFragment : Fragment() {
                     withContext(Dispatchers.Main) {
                         // Create parser for list of image names.
                         val mapper = Klaxon()
-                        val collisionImageNames: List<CollisionInfo>? = mapper.parseArray(result)
+                        val collisionImageObjects: List<CollisionInfo>? = mapper.parseArray(result)
 
-                        // Create list of strings that will hold names of images.
-                        val imageNames = arrayListOf<String>()
+                        if (collisionImageObjects != null) {
+                            // Update imageCollisionObjects in MainActivity so it later can be accessed in ImageFragment.
+                            (activity as MainActivity).updateCollisionImageObjects(collisionImageObjects)
 
-                        if (collisionImageNames != null) {
-                            for (name in collisionImageNames) {
-                                imageNames.add(name.imgName)
-                            }
+                            // Navigate to ImageFragment
+                            var fragmentManager = fragmentManager?.beginTransaction()
+                            fragmentManager?.replace(R.id.fragment, ImageFragment())
+                            fragmentManager?.commit()
+                        } else {
+                            Toast.makeText(activity,"Could not update collision objects!",Toast.LENGTH_SHORT).show()
                         }
-
-                        Log.d("tag", "success! ${imageNames.size}")
 
                     }
                 } catch (error: java.lang.Error) {
