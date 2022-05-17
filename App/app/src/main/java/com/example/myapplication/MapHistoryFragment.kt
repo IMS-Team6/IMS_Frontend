@@ -75,7 +75,7 @@ class MapHistoryFragment : Fragment() {
     private fun checkIfCollision(sessionId: String): Boolean {
         for (session in fetchedSessions) {
             if (session.sessionID == sessionId) {
-                if (session.collision.toString() == "true") { // Convert to int because session.collision is of type java.lang.boolean.
+                if (session.collision.toString() == "true") { // Convert to string because session.collision is of type java.lang.boolean.
                     return true
                 }
             }

@@ -5,10 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.net.URL
@@ -17,14 +20,19 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
     private lateinit var viewOfLayout: View
     private lateinit var client: OkHttpClient
     private lateinit var imageObjects: List<CollisionInfo>
+    private lateinit var imgView: ImageView
 
     private var sessionId: String = ""
+    private val baseURL: String = "http://3.72.195.76/api/download/collisionimg/"
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewOfLayout = inflater.inflate(R.layout.fragment_image, container, false)
 
         // Create OkHttp Client.
         client = OkHttpClient()
+
+        // Setup ImageView
+        imgView = viewOfLayout.findViewById(R.id.imageView)
 
         // Fetch image objects from MainActivity.
         imageObjects = (activity as MainActivity).getCollisionImageObjects()
@@ -54,10 +62,39 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
                 val selectedItem = parent?.getItemAtPosition(position)
                 val selectedImage = selectedItem.toString()
                 Log.d("selected image", selectedImage)
+
+                // TODO: Change image based on user selection.
+                showImageFromApi("$baseURL$sessionId/$selectedImage")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 Log.d("Spinner", "Nothing!")
+            }
+        }
+    }
+
+    private fun showImageFromApi(sUrl: String) {
+        // TODO: Add check and update user if fetching of the image was successful or not.
+        Log.d("testImage", "Fetching image from $sUrl")
+        val image = Picasso.get().load(sUrl).into(imgView)
+    }
+
+    private fun fetchImage(sUrl: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val result = getRequest(sUrl)
+
+            if (result != null) {
+                try {
+                    withContext(Dispatchers.Main) {
+                        Log.d("fetchImage", "Success!")
+
+                    }
+                } catch (error: java.lang.Error) {
+                    Toast.makeText(activity,error.toString(), Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Log.d("ERROR", "Request returned no response!")
+                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show()
             }
         }
     }
