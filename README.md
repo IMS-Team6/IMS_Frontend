@@ -11,14 +11,15 @@ Visuals, UX, Functions, imports, android manifest-> Permissions,
 Gradle scripts and dependencies, packages, android SDK
 
 # Code structure
-Main Activity kit
-DataClasses kit
-Paint objects kit
-My Bluetooth service kit
+- Main Activity kit
+- DataClasses kit
+- Paint objects kit
+- My Bluetooth service kit
+- - jkjlkjl
 # fragments
-Control fragment
-Connect fragment
-Map History fragment
+- Control fragment
+- Connect fragment
+- Map History fragment
 
 # Resource (res) root:
 layout, menu, mipmap, navigation, values
