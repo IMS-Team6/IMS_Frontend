@@ -14,6 +14,7 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
     private lateinit var viewOfLayout: View
     private lateinit var imageObjects: List<CollisionInfo>
     private lateinit var imgView: ImageView
+    private lateinit var txtView: TextView
 
     private var sessionId: String = ""
     private val baseURL: String = "http://3.72.195.76/api/download/collisionimg/"
@@ -23,11 +24,16 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
 
         // Setup ImageView
         imgView = viewOfLayout.findViewById(R.id.imageView)
+        txtView = viewOfLayout.findViewById(R.id.imageFragmentTitle)
 
         // Fetch image objects from MainActivity.
         imageObjects = (activity as MainActivity).getCollisionImageObjects()
-        Log.d("ImageFragment", "imageObjects: ${imageObjects.size}")
 
+        // Store session id in global variable and add to TextView.
+        sessionId = imageObjects[0].sessionID
+        txtView.text = "Session: $sessionId"
+
+        // Setup spinner.
         populateSpinnerWithImageIds()
 
         Log.d("ImageFragment", "onCreateView")
@@ -37,9 +43,6 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
 
     private fun populateSpinnerWithImageIds() {
         val imageNames = arrayListOf<String>()
-
-        // Store session id in global variable.
-        sessionId = imageObjects[0].sessionID
 
         // Iterate through each image objects and add each
         for (imgObject in imageObjects) {
