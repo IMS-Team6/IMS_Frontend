@@ -1,0 +1,23 @@
+24/4
+I watched some recorded lectures on canvas and some Kotlin documentation.
+
+Hours :3,5 
+
+25/4
+We had a sprint planning meeting. We talked about each task the mini group had for the week and how long it will take. 
+We in the front end group were to initiate a connection from the application to the mower.
+Hours: 4 hours
+
+
+27/4
+I found out that the DIS group had changed from BLE connection to classic connection which made it completely different in my case,
+I had to start over and completely a different code and spend more time on that so we could present a complete code for next week.
+6h
+
+30/4-01/5
+In this weekend a spend a lot of time one the classic bluetooth connection. I drove to jönköping and stayed there for to days so i can complete the bluetooth part.
+I took the raspberry pie from DIS because i wanted to make sure that everything was working correct. Me and Kero (DIS student) worked together. 
+He was setting up an environment on the raspberry pie so that i could test my code. I managed to get a connection and could send data to the pie with an byte array.
+I tested the code multiple times and every thing was working right. 
+
+Hours : 10
