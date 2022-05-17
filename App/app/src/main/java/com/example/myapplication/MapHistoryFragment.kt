@@ -254,6 +254,7 @@ class MapHistoryFragment : Fragment() {
                             // Navigate to ImageFragment
                             var fragmentManager = fragmentManager?.beginTransaction()
                             fragmentManager?.replace(R.id.fragment, ImageFragment())
+                            fragmentManager?.addToBackStack(null)
                             fragmentManager?.commit()
                         } else {
                             Toast.makeText(activity,"Could not update collision objects!",Toast.LENGTH_SHORT).show()
