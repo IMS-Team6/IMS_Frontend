@@ -31,6 +31,8 @@ class MapHistoryFragment : Fragment() {
     private lateinit var graphTitle: TextView
     private lateinit var mapView: ImageView
     private lateinit var showCollisionsButton: Button
+
+    private lateinit var fetchedSessions: List<SessionInfo>
     private var selectedSessionId: String = ""
 
     private var xValMax: Int = 0
@@ -58,13 +60,33 @@ class MapHistoryFragment : Fragment() {
 
         showCollisionsButton.setOnClickListener {
             if (selectedSessionId != "") {
-                fetchCollisionImages(baseURL + "collisionImg/" +  selectedSessionId)
+                val isCollision = checkIfCollision(selectedSessionId)
+
+                Log.d("isCollision", isCollision.toString())
+
+                if (isCollision) {
+                    fetchCollisionImages(baseURL + "collisionImg/" +  selectedSessionId)
+                } else {
+                    Toast.makeText(activity, "No collision images to display for this session.", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(activity, "No session id selected!", Toast.LENGTH_SHORT).show()
             }
         }
 
         return viewOfLayout
+    }
+
+    private fun checkIfCollision(sessionId: String): Boolean {
+        for (session in fetchedSessions) {
+            if (session.sessionID == sessionId) {
+                if (session.collision.toString() == "true") { // Convert to int because session.collision is of type java.lang.boolean.
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 
     private fun populateSpinnerWithSessions(sessions: List<SessionInfo>) {
@@ -230,8 +252,6 @@ class MapHistoryFragment : Fragment() {
                         val mapper = Klaxon()
                         val collisionImageNames: List<CollisionInfo>? = mapper.parseArray(result)
 
-                        // TODO: Add check so that the app don't crash when response sends back empty list of images.
-
                         // Create list of strings that will hold names of images.
                         val imageNames = arrayListOf<String>()
 
@@ -305,6 +325,7 @@ class MapHistoryFragment : Fragment() {
                         val sessions: List<SessionInfo>? = mapper.parseArray(result)
 
                         if (sessions != null) {
+                            fetchedSessions = sessions
                             populateSpinnerWithSessions(sessions)
                         } else {
                             Toast.makeText(activity,"List of sessions is empty!",Toast.LENGTH_SHORT).show();
