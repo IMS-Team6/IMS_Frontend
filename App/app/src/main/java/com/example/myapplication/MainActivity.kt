@@ -19,6 +19,7 @@ import android.view.Gravity
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
@@ -32,6 +33,7 @@ import java.nio.ByteBuffer
 import java.util.*
 
 object PermissionsBasedOnSDKVersion {
+    @RequiresApi(Build.VERSION_CODES.S)
     var sdk31Permissions = arrayOf(
     Manifest.permission.BLUETOOTH_SCAN,
     Manifest.permission.BLUETOOTH_CONNECT,
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                     val deviceName = device?.name
                     val deviceHardwareAddress = device?.address // MAC address
                     val id = device?.uuids
-                    Log.d("bluetooth", deviceName + " " + deviceHardwareAddress)
+                    Log.d("bluetooth", "$deviceName $deviceHardwareAddress")
                 }
             }
         }
@@ -85,10 +87,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Setup bottom navigation bar.
         val bottomNavigationItemView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navController = findNavController(R.id.fragment)
-
         bottomNavigationItemView.setupWithNavController(navController)
+
+        // Hide title bar.
+        supportActionBar?.hide()
 
         // Create BluetoothManager
         val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
@@ -124,7 +129,6 @@ class MainActivity : AppCompatActivity() {
                         val btDevice = bluetoothAdapter.getRemoteDevice(moverMacAddress)
                         btConnectionThread = BtConnectThread(btDevice)
                         btConnectionThread!!.run(bluetoothAdapter)
-                        Log.d("bluetooth", "connected?")
                     }
                 }
             }
@@ -188,20 +192,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private fun getPairedDevices(bluetoothAdapter: BluetoothAdapter) {
-        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter.bondedDevices
-        pairedDevices?.forEach { device ->
-            val uuIds = device.uuids
-
-            Log.d("Device", "Name: ${device.name} | Address: ${device.address}")
-
-            uuIds.forEach { id ->
-                Log.d("Test", "uuid: $id")
-            }
-        }
-    }
-
     private var requestBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             //granted
@@ -226,7 +216,7 @@ class MainActivity : AppCompatActivity() {
         if(btConnectionThread != null && btConnectionThread!!.isConnected()) {
             btConnectionThread!!.writeData(data)
         } else {
-            Toast.makeText(applicationContext,"Du är inte connectad till bluetooth",Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext,"You are not connected to bluetooth.",Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -241,14 +231,14 @@ class MainActivity : AppCompatActivity() {
             device.createInsecureRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"))//btDeviceAddress)
         }
 
-        public fun isConnected(): Boolean {
+        fun isConnected(): Boolean {
             if(this::mmOutStream.isInitialized)
                 return mmOutStream != null;
             else
                 return false
         }
 
-        public fun writeData(data: Int) {
+        fun writeData(data: Int) {
             try {
                 val byteArr: ByteArray = ByteBuffer.allocate(4).putInt(data).array()
                 mmOutStream.write(byteArr);
@@ -270,7 +260,7 @@ class MainActivity : AppCompatActivity() {
                         socket.connect()
                         // The connection attempt succeeded. Perform work associated with
                         // the connection in a separate thread.
-                        if(socket.isConnected()) {
+                        if(socket.isConnected) {
                             Log.d("bluetooth", "Is Connected")
                             imageView2.setImageResource(R.drawable.rb_connected)
                             mmInStream = socket.inputStream
