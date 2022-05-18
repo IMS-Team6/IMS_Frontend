@@ -1,0 +1,50 @@
+Week 18
+2/5 Monday 3pm
+Sprint meeting. Hardware had an issue with raspberry pi because the code built-in did override on the code group made but they solved the issue after many hours. 
+Since sessions are created on backend, we would probably use sharedPreference method which is build-in in Kotlin. Or the implementation shall happen through channel return. 
+This week we will try all connections to see what is working. Fetch all sessions from backend.
+Hardware teamwork is ready to test all communication with backend and front end.
+1h
+Work on my own after the meeting:
+I’m searching for how to implement session which is completed by backend. We need to fetch session id in an object. A way to implement this session is through openBasicChannel which returns a channel.  An instance of a class which represents a connection session. There are different public methods available according to the android/kotlin documentation. To discuss and reflect this with the frontend group I asked for a meeting tomorrow.
+4h
+Total 5h
+Absent rest of the week because of personal reasons.
+
+Week 19
+9/5 Monday. 
+Sprint planning at 3.00 pm with whole group:
+For two weeks ago frontend group managed to make Bluetooth connection work. A week ago, the hardware group tested frontend activates such as the Bluetooth connection which ended session after each connection. This issue been solved with the right APK file and some changes the problem is solved by a team worker of the frontend. 
+Plans for this week: 
+Hardware will test backend sessions tomorrow at 10am. 
+Backend doing error handlers for the requests of backend.
+Frontend is going to work on betting design and functionalities. We decided a frontend meeting after sprint meeting. Also, we decided to fetch token pictures from backend, for that a whole fragment need to be created for a starter.
+Also plan for retrospective meeting on Friday and probably next week or soon presentation meeting. 
+Meeting with frontend group:
+Each team worker is distributed with each assignment to Friday. Team worker Mikael will continue work with showing session data on the MapHistoryFragment, Khaleel on Bluetooth and I will work on creating new fragment called ImageFragment where all pictures will be displayed from backend, also when clicking on certain picture should display.
+1h
+
+Work on my own:
+First, I need to fetch merge from main to get all current changes to my branch “Jenny”. Then I need to create a fragment called ImageFragment. The fragment should have skeleton of image view of scroll view type of visuals or grid view.
+Next a fetch from API should be possible to execute, for start I will test any API to fetch. 10
+4h
+10/5 Tuesday
+Created new branch imagefragment where I merged from main all the changes. I implemented imagefragment by adding fragment and xml layout, adding it to menu and navbar. So far, no errors but simulator isn’t displaying so I must have missed something. Further work today.
+3h
+
+Imagefragment now is displaying/visualizing the button of the fragment and it is whole set up. The contain of the imagefragment is having a linearlayout with gridview and imageview. 
+There are many ways to implement the fetching API pictures of backend. On Friday I will discuss with the group which way is most suitable.
+A way to fetch pictures/images is instead declaring the gridview in layout, is by implementing the code in fragment with gridadapter but I’m not sure if it only suitable for array of local pictures...
+There is good documentation on built in methods to implement fetch requests with jetpack. Jetpack is collection of libraries that contains less and clean code for different types of API. One of the APIs are Java API even imitative Kotlin APis, many powerful tools. Since our project didn’t dig into jetpack, I need socket friendly vanilla implementation for fetching APi from backend. 
+Another documentation for fetching API is with Retrofit but this API turns into Java interface which isn’t relative for our project.
+8h
+13/5 Friday
+Since the set up in layout for imagefragment is ready for grid view of pictures/images. Next step is to set up fetching API from backend.
+Team worker Mikael helped to find documentation for okhttp for the fetching API. 
+What so good with OkHttp is that it preserves when the network is troublesome, it will silently recover from common connection problems. Which is exact and very related for session connections.
+Retrospective with whole group: 
+Frontend team worker Mikael is working on maphistory to manage draw coordinate dots on screen correctly. 
+ImageFragment layout is almost finished except that we discussed how and what should fetch from backend. Which session, object etc. Timestamp would be nice if we could implement so that collision pictures/images will view and tell when the pictures are imported from backend.
+3h
+
+Total approximate 19h

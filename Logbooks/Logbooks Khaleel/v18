@@ -1,0 +1,24 @@
+2/5 
+A sprint meeting was held with the entire group. We are done with the bluetooth connection and we can now send data. 
+Our goal for this weekend was to send data to the mower (drive forward,backward,right and left…)
+
+2H
+
+3/5
+We in front end group had a meeting where we talked about how long we have done and what we are going to do next. 
+
+2H
+
+I worked with the datastream. I Implemented a socket where we could send data to the mower via bluetooth. 
+I had more communication with the DIS group than usual because of the datastream. In the beginning they wanted to receive the 
+data as a string but later they changed it to INT so I had to change my code also. Some buttons were created in the Control fragment
+where each button sends a specific integer that the DIS is going to handle. The socket I implemented sends data in a byte array.
+
+Hours: 5
+
+4/5
+Since i live far away from Jönköping i couldn't rally see the results of my implementation on the raspberry pie so i decided to
+get my own pie and test the data steam. I asked the DIS group to send me the Python code so i could run it and test the application.
+After the pie setup it become easier to handle the errors and see how the Pie was receiving the data.
+
+Hours: 4

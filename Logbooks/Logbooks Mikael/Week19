@@ -1,0 +1,36 @@
+<Mikael Mohlin - Week 19>
+
+9/5
+A sprint planning meeting was held with the whole group. Our goal within the frontend group was to finalize the bluetooth features and display position
+data from the mover. Next week is planned to be reserved for writing the documentation, so the whole implementation phase is intended to be done by the end of
+this week.
+I continued working alone on the current task, which was to display position data on the app. Last week I managed to fetch the session object from the backend
+and parse it to a Kotlin object. This object which in turn contains the x,y values which is needed to draw out the positions. To extract the position data from
+the parsed object i first had to convert it from a string to an object called Datapoint(x,y) which obviously contains the x and y values. After a while, I finally
+managed to the converting process work.
+~ 5 hours
+
+10/5
+I noticed some error when the app tried to convert the result from backend to integers of x and y values. So, I took some time to figure that out which led
+to that I had to rethink some of the implementation when converting the parsed object to a DataPoint(x,y).
+~ 4 hours
+
+12/5
+I continued working on the task of visualizing position data. To draw the actual data points on the screen I had to implement a function called drawOnCanvas which 
+then takes a list of DataPoints from my custom class to later on display on the screen. After a few hours of hustling I finally managed do draw out the
+position data in the from of points.
+I later on spent some time cleaning up the code and moving some snippets to seperate files, in order to make the code more structured and readable.
+~ 4 hours
+
+13/5
+A retrospective meeting was held with the whole group with intention to go through what has been achived this week.
+~ 1 hours
+
+15/5
+As of now, the map that contains position data is quite zoomed out which makes the different datapoints quite hard to see. So, to fix this I implemented a function
+that dynamically scales the map according to how big the received x,y values are.
+Later on I implemented a functionality which draws the first data point from a session to another color, with intention to indicate that specific data point
+is the starting points of the mover.
+~ 6 hours
+
+Total hours spent: ~20 hours
