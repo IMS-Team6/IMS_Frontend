@@ -27,7 +27,6 @@ class MapHistoryFragment : Fragment() {
     private lateinit var mapView: ImageView
     private lateinit var showCollisionsButton: Button
 
-    private lateinit var fetchedSessions: List<SessionInfo>
     private lateinit var fetchedSession: Session
     private var selectedSessionId: String = ""
 
@@ -204,7 +203,6 @@ class MapHistoryFragment : Fragment() {
                 }
 
             }
-
 
             if (collisions.isNotEmpty()) {
                 // Draw out collisions on map, if there exists any.
