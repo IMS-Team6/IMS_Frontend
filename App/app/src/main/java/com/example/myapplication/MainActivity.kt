@@ -232,10 +232,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         fun isConnected(): Boolean {
-            if(this::mmOutStream.isInitialized)
-                return mmOutStream != null;
-            else
-                return false
+            return this::mmOutStream.isInitialized
         }
 
         fun writeData(data: Int) {
