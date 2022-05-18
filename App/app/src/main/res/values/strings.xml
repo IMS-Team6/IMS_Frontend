@@ -1,19 +1,10 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="controlFragment">Styr din drönare</string>
-    <string name="manuell">Manuellt</string>
-    <string name="auto">Automatiskt</string>
-    <string name="bluetoothConnected">Bluetooth är kopplad</string>
-    <string name="bluetoothNotConnected">Bluetooth är ej kopplad</string>
-
-    <string-array name="test_array">
-        <item>One</item>
-        <item>Two</item>
-        <item>Three</item>
-        <item>Four</item>
-    </string-array>
-  
+    <string name="controlFragment">Control Mover</string>
+    <string name="manuell">Manual</string>
+    <string name="auto">Automatic</string>
+    <string name="bluetoothConnected">Bluetooth connected</string>
+    <string name="bluetoothNotConnected">Bluetooth is not connected</string>
     <string name="string_item" />
-
 </resources>
