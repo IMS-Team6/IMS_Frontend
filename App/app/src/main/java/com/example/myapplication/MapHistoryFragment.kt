@@ -28,6 +28,7 @@ class MapHistoryFragment : Fragment() {
     private lateinit var showCollisionsButton: Button
 
     private lateinit var fetchedSessions: List<SessionInfo>
+    private lateinit var fetchedSession: Session
     private var selectedSessionId: String = ""
 
     private var xValMax: Int = 0
@@ -54,12 +55,10 @@ class MapHistoryFragment : Fragment() {
         showCollisionsButton = viewOfLayout.findViewById(R.id.showCollisionsBtn)
 
         showCollisionsButton.setOnClickListener {
+            // Check if user has selected a specific session to display its potential images.
             if (selectedSessionId != "") {
-                val isCollision = checkIfCollision(selectedSessionId)
-
-                Log.d("isCollision", isCollision.toString())
-
-                if (isCollision) {
+                // Check and see if current fetched session contains any images.
+                if (fetchedSession.collisionImgExists.toString() == "true") {
                     fetchCollisionObjects(baseURL + "collisionImg/" +  selectedSessionId)
                 } else {
                     Toast.makeText(activity, "No collision images to display for this session.", Toast.LENGTH_SHORT).show()
@@ -70,18 +69,6 @@ class MapHistoryFragment : Fragment() {
         }
 
         return viewOfLayout
-    }
-
-    private fun checkIfCollision(sessionId: String): Boolean {
-        for (session in fetchedSessions) {
-            if (session.sessionID == sessionId) {
-                if (session.collision.toString() == "true") { // Convert to string because session.collision is of type java.lang.boolean.
-                    return true
-                }
-            }
-        }
-
-        return false
     }
 
     private fun populateSpinnerWithSessions(sessions: List<SessionInfo>) {
@@ -283,6 +270,9 @@ class MapHistoryFragment : Fragment() {
                         val session = mapper.parse<Session>(result)
 
                         if (session != null) {
+                            // Store current session in local variable.
+                            fetchedSession = session
+
                             // Convert position data to strings
                             val posX = session.positions["posX"].toString()
                             val posY = session.positions["posY"].toString()
@@ -323,7 +313,6 @@ class MapHistoryFragment : Fragment() {
                         val sessions: List<SessionInfo>? = mapper.parseArray(result)
 
                         if (sessions != null) {
-                            fetchedSessions = sessions
                             populateSpinnerWithSessions(sessions)
                         } else {
                             Toast.makeText(activity,"List of sessions is empty!",Toast.LENGTH_SHORT).show();

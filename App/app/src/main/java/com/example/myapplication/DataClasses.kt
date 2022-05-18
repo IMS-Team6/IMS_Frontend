@@ -9,8 +9,10 @@ data class Session(
     val robotState: String,
     val collision: java.lang.Boolean,
     val positions: Map<String, Positions> = mapOf(),
-    val collisionPos: Map<String, CollisionPos> = mapOf()
+    val collisionPos: Map<String, CollisionPos> = mapOf(),
+    val collisionImgExists: java.lang.Boolean,
 )
+
 // Data classes belonging to Session data class.
 data class Positions(val posX: List<String>, val posY: List<String>)
 data class CollisionPos(val colX: List<String>, val colY: List<String>)
