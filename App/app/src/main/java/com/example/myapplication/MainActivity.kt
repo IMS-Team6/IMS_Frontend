@@ -15,6 +15,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -53,11 +54,14 @@ class MainActivity : AppCompatActivity() {
     private val moverUuId: String = "7be1fcb3-5776-42fb-91fd-2ee7b5bbb86d"
     var btConnectionThread: BtConnectThread? = null;
 
+    private lateinit var collisionImageObjects: MutableList<CollisionInfo>
+
     private val receiver = object: BroadcastReceiver() {
         @SuppressLint("MissingPermission")
 
         override fun onReceive(context: Context, intent: Intent) {
             val action: String? = intent.action
+
             when(action) {
                 BluetoothDevice.ACTION_FOUND -> {
                     Log.d("bluetooth", "Device found!")
@@ -122,11 +126,17 @@ class MainActivity : AppCompatActivity() {
                         btConnectionThread!!.run(bluetoothAdapter)
                         Log.d("bluetooth", "connected?")
                     }
-                    //getPairedDevices(bluetoothAdapter)
-
                 }
             }
         }
+    }
+
+    fun getCollisionImageObjects(): List<CollisionInfo> {
+        return collisionImageObjects
+    }
+
+    fun updateCollisionImageObjects(colImgObjects: List<CollisionInfo>) {
+        collisionImageObjects = colImgObjects as MutableList<CollisionInfo>
     }
 
     private fun checkPermissions(): Boolean {

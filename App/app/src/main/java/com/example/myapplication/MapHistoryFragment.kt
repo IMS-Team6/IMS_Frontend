@@ -4,14 +4,11 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity.apply
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.*
-import androidx.core.view.GravityCompat.apply
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +17,6 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.net.URL
-import java.util.*
 
 
 class MapHistoryFragment : Fragment() {
@@ -29,6 +25,11 @@ class MapHistoryFragment : Fragment() {
 
     private lateinit var graphTitle: TextView
     private lateinit var mapView: ImageView
+    private lateinit var showCollisionsButton: Button
+
+    private lateinit var fetchedSessions: List<SessionInfo>
+    private lateinit var fetchedSession: Session
+    private var selectedSessionId: String = ""
 
     private var xValMax: Int = 0
     private var xValMin: Int = 0
@@ -50,6 +51,23 @@ class MapHistoryFragment : Fragment() {
         // Fetch mover sessions from backend API.
         fetchSessions(baseURL + "sessions")
 
+        // Setup button collision image button.
+        showCollisionsButton = viewOfLayout.findViewById(R.id.showCollisionsBtn)
+
+        showCollisionsButton.setOnClickListener {
+            // Check if user has selected a specific session to display its potential images.
+            if (selectedSessionId != "") {
+                // Check and see if current fetched session contains any images.
+                if (fetchedSession.collisionImgExists.toString() == "true") {
+                    fetchCollisionObjects(baseURL + "collisionImg/" +  selectedSessionId)
+                } else {
+                    Toast.makeText(activity, "No collision images to display for this session.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(activity, "No session id selected!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         return viewOfLayout
     }
 
@@ -66,9 +84,8 @@ class MapHistoryFragment : Fragment() {
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedItem = parent?.getItemAtPosition(position)
-                Log.d("SPINNER", "$selectedItem selected!")
-
                 fetchSession(baseURL + "session/" + selectedItem.toString())
+                selectedSessionId = selectedItem.toString()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -206,6 +223,42 @@ class MapHistoryFragment : Fragment() {
         mapView.background = BitmapDrawable(resources, bitmap)
     }
 
+    private fun fetchCollisionObjects(sUrl: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val result = getRequest(sUrl)
+
+            if (result != null) {
+                try{
+                    withContext(Dispatchers.Main) {
+                        // Create parser for list of image names.
+                        val mapper = Klaxon()
+                        val collisionImageObjects: List<CollisionInfo>? = mapper.parseArray(result)
+
+                        if (collisionImageObjects != null) {
+                            // Update imageCollisionObjects in MainActivity so it later can be accessed in ImageFragment.
+                            (activity as MainActivity).updateCollisionImageObjects(collisionImageObjects)
+
+                            // Navigate to ImageFragment
+                            var fragmentManager = fragmentManager?.beginTransaction()
+                            fragmentManager?.replace(R.id.fragment, ImageFragment())
+                            fragmentManager?.addToBackStack(null)
+                            fragmentManager?.setReorderingAllowed(true)
+                            fragmentManager?.commit()
+                        } else {
+                            Toast.makeText(activity,"Could not update collision objects!",Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+                } catch (error: java.lang.Error) {
+                    Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Log.d("ERROR", "Request returned no response!")
+                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun fetchSession(sUrl: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             val result = getRequest(sUrl)
@@ -217,6 +270,9 @@ class MapHistoryFragment : Fragment() {
                         val session = mapper.parse<Session>(result)
 
                         if (session != null) {
+                            // Store current session in local variable.
+                            fetchedSession = session
+
                             // Convert position data to strings
                             val posX = session.positions["posX"].toString()
                             val posY = session.positions["posY"].toString()
@@ -237,11 +293,11 @@ class MapHistoryFragment : Fragment() {
                 }
                 catch (error: java.lang.Error) {
                     Log.d("ERROR", error.toString())
-                    Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Log.d("ERROR", "Request returned no response!")
-                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show()
             }
         }
     }
