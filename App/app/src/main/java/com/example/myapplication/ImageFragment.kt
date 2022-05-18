@@ -36,8 +36,6 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
         // Setup spinner.
         populateSpinnerWithImageIds()
 
-        Log.d("ImageFragment", "onCreateView")
-
         return viewOfLayout
     }
 
@@ -55,14 +53,13 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedItem = parent?.getItemAtPosition(position)
-
                 val selectedImage = selectedItem.toString()
 
                 showImageFromApi("$baseURL$sessionId/$selectedImage")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                Log.d("Spinner", "Nothing!")
+                Log.d("Spinner", "Nothing Selected!")
             }
         }
     }

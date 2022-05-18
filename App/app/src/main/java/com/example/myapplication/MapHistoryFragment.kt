@@ -61,10 +61,10 @@ class MapHistoryFragment : Fragment() {
                 if (fetchedSession.collisionImgExists.toString() == "true") {
                     fetchCollisionObjects(baseURL + "collisionImg/" +  selectedSessionId)
                 } else {
-                    Toast.makeText(activity, "No collision images to display for this session.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, getString(R.string.error_msg_no_collisions), Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(activity, "No session id selected!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, getString(R.string.error_msg_no_session_selected), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -217,7 +217,7 @@ class MapHistoryFragment : Fragment() {
                 }
             }
         } else {
-            Toast.makeText(activity, "No position data to draw on the selected session session", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, getString(R.string.error_msg_no_position_data), Toast.LENGTH_SHORT).show()
         }
 
         mapView.background = BitmapDrawable(resources, bitmap)
@@ -245,7 +245,7 @@ class MapHistoryFragment : Fragment() {
                             fragmentManager?.setReorderingAllowed(true)
                             fragmentManager?.commit()
                         } else {
-                            Toast.makeText(activity,"Could not update collision objects!",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity,getString(R.string.error_msg_could_not_update_collision),Toast.LENGTH_SHORT).show()
                         }
 
                     }
@@ -253,8 +253,7 @@ class MapHistoryFragment : Fragment() {
                     Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Log.d("ERROR", "Request returned no response!")
-                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity,getString(R.string.error_msg_no_response),Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -287,17 +286,15 @@ class MapHistoryFragment : Fragment() {
 
                             drawOnCanvas(positions, collisions)
                         } else {
-                            Log.d("ERROR", "Could not parse session object!")
+                            Log.d("ERROR", getString(R.string.error_msg_could_not_parse))
                         }
                     }
                 }
                 catch (error: java.lang.Error) {
-                    Log.d("ERROR", error.toString())
                     Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Log.d("ERROR", "Request returned no response!")
-                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity,getString(R.string.error_msg_no_response),Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -315,18 +312,15 @@ class MapHistoryFragment : Fragment() {
                         if (sessions != null) {
                             populateSpinnerWithSessions(sessions)
                         } else {
-                            Toast.makeText(activity,"List of sessions is empty!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity,getString(R.string.error_msg_no_sessions_exist),Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
                 catch (error: Error) {
-                    Log.d("ERROR", error.toString())
-                    Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show()
                 }
-
             } else {
-                Log.d("ERROR", "Request returned no response!")
-                Toast.makeText(activity,"Request returned no response!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,getString(R.string.error_msg_no_response),Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -345,7 +339,7 @@ class MapHistoryFragment : Fragment() {
             val response = client.newCall(request).execute()
             result = response.body?.string()
         } catch (error: Error) {
-            Log.d("ERROR", error.toString())
+            Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show();
         }
 
         return result

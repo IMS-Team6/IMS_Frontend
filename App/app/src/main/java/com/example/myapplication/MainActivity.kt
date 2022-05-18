@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -53,6 +54,8 @@ class MainActivity : AppCompatActivity() {
     private val moverMacAddress: String = "B8:27:EB:21:8A:D4"
     private val moverUuId: String = "7be1fcb3-5776-42fb-91fd-2ee7b5bbb86d"
     var btConnectionThread: BtConnectThread? = null;
+
+    private lateinit var bluetoothStatusText: TextView
 
     private lateinit var collisionImageObjects: MutableList<CollisionInfo>
 
@@ -93,6 +96,9 @@ class MainActivity : AppCompatActivity() {
         // Hide title bar.
         supportActionBar?.hide()
 
+        // Setup textview
+        bluetoothStatusText = findViewById(R.id.btTextStatus)
+
         // Create BluetoothManager
         val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
         val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
@@ -101,6 +107,7 @@ class MainActivity : AppCompatActivity() {
             imageView2.setImageResource(R.drawable.rb_connected)
         else
             imageView2.setImageResource(R.drawable.not_connected)
+
 
         val bluetoothConnectBtn: Button = findViewById(R.id.bluetoothConnectButton)
 
@@ -214,7 +221,7 @@ class MainActivity : AppCompatActivity() {
         if(btConnectionThread != null && btConnectionThread!!.isConnected()) {
             btConnectionThread!!.writeData(data)
         } else {
-            Toast.makeText(applicationContext,"You are not connected to bluetooth.",Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext,getString(R.string.error_msg_bt_not_connected),Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -237,8 +244,8 @@ class MainActivity : AppCompatActivity() {
             try {
                 val byteArr: ByteArray = ByteBuffer.allocate(4).putInt(data).array()
                 mmOutStream.write(byteArr);
-            } catch (e: java.lang.Exception) {
-                Log.e("bluetooth", "Exception during write", e)
+            } catch (error: java.lang.Exception) {
+                Log.e("bluetooth", error.toString())
             }
         }
 
@@ -272,8 +279,8 @@ class MainActivity : AppCompatActivity() {
         fun cancel() {
             try {
                 mmSocket?.close()
-            } catch (e: IOException) {
-                Log.e(TAG, "Could not close the client socket", e)
+            } catch (error: IOException) {
+                Log.e(TAG, error.toString())
             }
         }
     }

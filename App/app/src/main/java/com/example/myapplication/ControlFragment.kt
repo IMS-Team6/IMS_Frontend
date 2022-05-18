@@ -29,10 +29,8 @@ class ControlFragment : Fragment(R.layout.fragment_control) {
 
         controlUp.setOnTouchListener { _, event ->              //Forward
             if (event.action == MotionEvent.ACTION_DOWN) {
-                Log.d("kalle", "true!")
                 (activity as MainActivity?)?.writeData(1);
             } else if (event.action == MotionEvent.ACTION_UP) {
-                Log.d("kalle", "false!")
                 (activity as MainActivity?)?.writeData(0);
             }
             false
