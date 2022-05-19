@@ -284,7 +284,7 @@ class MainActivity : AppCompatActivity() {
                         // The connection attempt succeeded. Perform work associated with
                         // the connection in a separate thread.
                         if(socket.isConnected) {
-                            Log.d("bluetooth", "Is Connected")
+                            bluetoothStatusText.text = getString(R.string.bluetooth_connected)
                             imageView2.setImageResource(R.drawable.rb_connected)
                             mmInStream = socket.inputStream
                             mmOutStream = socket.outputStream
