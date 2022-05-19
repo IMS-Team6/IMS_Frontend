@@ -1,15 +1,17 @@
 # IMS_Frontend: Frontend Documentation
 
 ## Introduction, purpose:
-Application created in Android Studio. Purpose of the app is to control the mower and fetch data from backend.
+Frontend application created in Android Studio. 
+Purpose of the app is to control the mower and fetch data from backend.
 
 ---------
 
-## Step by step
-1. Download Android Studio and open repository https://github.com/IMS-Team6/IMS_Frontend/tree/main/App
-2. Clone the code and display it in Android Studio
-3. Connect the android phone to the computer and choose Physical connected device in Device Manager
-4. Run the application
+## Step by step.
+1. Download Android Studio.
+2. Open repository https://github.com/IMS-Team6/IMS_Frontend/tree/main/App
+3. Clone the code and display it in Android Studio.
+4. Connect the android phone to the computer and choose Physical connected device in Device Manager instead of built-in simulator.
+5. Run the application
 
 ---------
 
@@ -19,14 +21,14 @@ Gradle scripts and dependencies, packages, android SDK
 
 ---------
 
-## Code/File Structure
-- ConnectFragment.kt
-- ControlFragment.kt
-- DataClasses.kt
-- ImageFragment.kt
-- MainActivity.kt
-- MapHistoryFragment.kt
-- PaintObjects.kt
+## File Structure in https://github.com/IMS-Team6/IMS_Frontend/tree/main/docs
+
+- ConnectFragment.md
+- ControlFragment.md
+- ImageFragment.md
+- MainActivity.md
+- MapHistoryFragment.md
+- ObjectsAndClasses.md
 
 ---------
 
