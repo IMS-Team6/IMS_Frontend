@@ -151,7 +151,7 @@ private fun drawOnCanvas(positions: MutableList<DataPoint>, collisions: MutableL
 ```
 -----------------
 ###  fetchCollisionObjects
-Takes a string url as an argument and makes calls a function that in turn performs a GET-request to the backend. If it succeeds, the function will later on parse the result and store information about collision objects in a local variable inside the MainActivity.
+Takes a string url as an argument and calls a function that in turn performs a GET-request to the backend. If it succeeds, the function will receive a list of collisionobjects and later on parse the result and store information about collision objects in a local variable inside the MainActivity.
 
 | Parameters | Type |
 | ----------- | ----------- | 
@@ -163,6 +163,51 @@ Takes a string url as an argument and makes calls a function that in turn perfor
 
 ```
 private fun fetchCollisionObjects(sUrl: String)
+```
+-----------------
+###  fetchSession
+Takes a string url as an arguemtn and make calls a funtion that in turns performs a GET-request to the backend. If it succeeds, the function will later on receive a session object containing information about the current sessions x and y values. Which it parses and calls the function drawOnCanvas.
+
+| Parameters | Type |
+| ----------- | ----------- | 
+| sUrl | String |
+
+| Returns |
+| --------|
+| Void |
+
+```
+private fun fetchSession(sUrl: String)
+```
+-----------------
+###  fetchSessions
+Takes a string url as an arguemtn and make calls a funtion that in turns performs a GET-request to the backend. If it succeeds, the function will later on receive a kust of session object containing meta information about the existing sessions in the database. Later on the function parses the results and calls populateSpinnerWithSessions.
+
+| Parameters | Type |
+| ----------- | ----------- | 
+| sUrl | String |
+
+| Returns |
+| --------|
+| Void |
+
+```
+private fun fetchSessions(sUrl: String)
+```
+-----------------
+###  getRequest
+Takes a string url as an arguemtn and make calls a funtion that in turns performs a GET-request to the backend. If it succeeds, the function will return the response body as a string. 
+
+| Parameters | Type |
+| ----------- | ----------- | 
+| sUrl | String |
+
+| Returns |
+| --------|
+| String |
+
+```
+private fun getRequest(sUrl: String): String?
 ```
 
 
