@@ -1,10 +1,11 @@
 # MainActivity
-
-# - Permission object
+Start screen initial activity for the application that is connected to bottom menu and its fragments. The main activity contains a permission object and a main class.
+#  Permission object
+   -Annotated element require API. The API is called on the given API level or higher.
    -Contans an array for SDk permission for accesing coarse location, bluetooth and bluetooth admin. 
    -There are also applied SDK permission levels 29,30 and 31 SDK permissions.
    
-# - MainActivity class
+#  MainActivity class
    -
 
 
