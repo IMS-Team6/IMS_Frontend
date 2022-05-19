@@ -1,19 +1,25 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="controlFragment">Styr din drönare</string>
-    <string name="manuell">Manuellt</string>
-    <string name="auto">Automatiskt</string>
-    <string name="bluetoothConnected">Bluetooth är kopplad</string>
-    <string name="bluetoothNotConnected">Bluetooth är ej kopplad</string>
-
-    <string-array name="test_array">
-        <item>One</item>
-        <item>Two</item>
-        <item>Three</item>
-        <item>Four</item>
-    </string-array>
-  
+    <string name="control_mover">Mover Controls</string>
+    <string name="manual">Manual</string>
+    <string name="automatic">Automatic</string>
+    <string name="bluetooth_connected">Bluetooth connected</string>
+    <string name="bluetooth_not_connected">Bluetooth is not connected</string>
     <string name="string_item" />
+    <string name="choose_session">Choose session to display on map</string>
+    <string name="show_images">Show Collision Images</string>
+    <string name="choose_image">Choose image to display</string>
+    <string name="connect_to_bluetooth">Connect To Bluetooth</string>
 
+    <!-- Error messages -->
+    <string name="error_msg_bt_not_connected">You are not connected to bluetooth.</string>
+    <string name="error_msg_no_collisions">No collision images to display for this session.</string>
+    <string name="error_msg_no_session_selected">No session id selected.</string>
+    <string name="error_msg_no_position_data">No position data to display from the selected session</string>
+    <string name="error_msg_could_not_update_collision">Could not update collision objects.</string>
+    <string name="error_msg_no_response">Request returned no response.</string>
+    <string name="error_msg_could_not_parse">Could not parse session object.</string>
+    <string name="error_msg_no_sessions_exist">No sessions exist in the database.</string>
+    <string name="error_msg_bt_not_supported">Bluetooth is not supported on this device.</string>
 </resources>

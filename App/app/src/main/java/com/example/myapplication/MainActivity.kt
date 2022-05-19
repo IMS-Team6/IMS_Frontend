@@ -2,7 +2,6 @@ package com.example.myapplication
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.ActionBar
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -15,10 +14,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
@@ -32,12 +32,18 @@ import java.nio.ByteBuffer
 import java.util.*
 
 object PermissionsBasedOnSDKVersion {
+    @RequiresApi(Build.VERSION_CODES.S)
     var sdk31Permissions = arrayOf(
     Manifest.permission.BLUETOOTH_SCAN,
     Manifest.permission.BLUETOOTH_CONNECT,
     Manifest.permission.BLUETOOTH_ADMIN)
 
     var sdk30Permissions =arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.BLUETOOTH,
+        Manifest.permission.BLUETOOTH_ADMIN
+    )
+    var sdk29Permissions = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.BLUETOOTH,
         Manifest.permission.BLUETOOTH_ADMIN
@@ -53,6 +59,8 @@ class MainActivity : AppCompatActivity() {
     private val moverMacAddress: String = "B8:27:EB:21:8A:D4"
     private val moverUuId: String = "7be1fcb3-5776-42fb-91fd-2ee7b5bbb86d"
     var btConnectionThread: BtConnectThread? = null;
+
+    private lateinit var bluetoothStatusText: TextView
 
     private lateinit var collisionImageObjects: MutableList<CollisionInfo>
 
@@ -74,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                     val deviceName = device?.name
                     val deviceHardwareAddress = device?.address // MAC address
                     val id = device?.uuids
-                    Log.d("bluetooth", deviceName + " " + deviceHardwareAddress)
+                    Log.d("bluetooth", "$deviceName $deviceHardwareAddress")
                 }
             }
         }
@@ -85,29 +93,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Setup bottom navigation bar.
         val bottomNavigationItemView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navController = findNavController(R.id.fragment)
-
         bottomNavigationItemView.setupWithNavController(navController)
+
+        // Hide title bar.
+        supportActionBar?.hide()
+
+        // Setup textview
+        bluetoothStatusText = findViewById(R.id.btTextStatus)
+        updateBtConnectionStatus()
 
         // Create BluetoothManager
         val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
         val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
 
-        if(btConnectionThread != null && btConnectionThread!!.isConnected())
-            imageView2.setImageResource(R.drawable.rb_connected)
-        else
-            imageView2.setImageResource(R.drawable.not_connected)
-
+        // Setup bluetooth connect button.
         val bluetoothConnectBtn: Button = findViewById(R.id.bluetoothConnectButton)
 
         bluetoothConnectBtn.setOnClickListener {
             // Check if device supports bluetooth
             if (bluetoothAdapter == null) {
-                Log.d("bluetooth", "Device does not support bluetooth.")
+                Toast.makeText(applicationContext,getString(R.string.error_msg_bt_not_supported),Toast.LENGTH_SHORT).show()
             } else {
-                Log.d("bluetooth", "Bluetooth is supported.")
-
                 // Check if bluetooth is enabled
                 if (!bluetoothAdapter.isEnabled) {
                     val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
@@ -124,11 +133,29 @@ class MainActivity : AppCompatActivity() {
                         val btDevice = bluetoothAdapter.getRemoteDevice(moverMacAddress)
                         btConnectionThread = BtConnectThread(btDevice)
                         btConnectionThread!!.run(bluetoothAdapter)
-                        Log.d("bluetooth", "connected?")
                     }
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
+    }
+
+    private fun updateBtConnectionStatus() {
+        if (checkConnectionStatus()) {
+            imageView2.setImageResource(R.drawable.rb_connected)
+            bluetoothStatusText.text = getString(R.string.bluetooth_connected)
+        } else {
+            imageView2.setImageResource(R.drawable.not_connected)
+            bluetoothStatusText.text = getString(R.string.bluetooth_not_connected)
+        }
+    }
+
+    fun checkConnectionStatus(): Boolean {
+        return btConnectionThread != null && btConnectionThread!!.isConnected()
     }
 
     fun getCollisionImageObjects(): List<CollisionInfo> {
@@ -140,23 +167,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissions(): Boolean {
-        var result = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        var result = false
 
-            PermissionsBasedOnSDKVersion.sdk31Permissions.forEach {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PermissionsBasedOnSDKVersion.sdk31Permissions.forEach { // Sdk version 31.
                 result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
                 if(!result)
                     return  result;
             }
         }
-        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) { // Sdk version 30.
             PermissionsBasedOnSDKVersion.sdk30Permissions.forEach {
                 result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
                 if(!result)
                     return  result;
             }
         }
-        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) { // Sdk version 29.
+            PermissionsBasedOnSDKVersion.sdk29Permissions.forEach {
+                result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+                if(!result)
+                    return  result;
+            }
+        }
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) { // Sdk version 28.
             PermissionsBasedOnSDKVersion.sdk28Permissions.forEach {
                 result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
                 if(!result)
@@ -167,17 +201,15 @@ class MainActivity : AppCompatActivity() {
         return result;
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(receiver)
-    }
-
     private fun setupBluetoothPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk31Permissions)
         }
         else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
             requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk30Permissions)
+        }
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk29Permissions)
         }
         else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk28Permissions)
@@ -188,27 +220,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private fun getPairedDevices(bluetoothAdapter: BluetoothAdapter) {
-        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter.bondedDevices
-        pairedDevices?.forEach { device ->
-            val uuIds = device.uuids
-
-            Log.d("Device", "Name: ${device.name} | Address: ${device.address}")
-
-            uuIds.forEach { id ->
-                Log.d("Test", "uuid: $id")
-            }
-        }
-    }
-
     private var requestBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
-            //granted
-            Log.d("Bluetooth Status -->", "Bluetooth permission granted")
+            // Bluetooth request granted.
+            Log.d("requestBluetooth", "Granted")
         }else{
-            //deny
-            Log.d("Bluetooth Status -->", "Bluetooth permission denied")
+            // Bluetooth request denied.
+            Log.d("requestBluetooth", "Denied")
         }
     }
 
@@ -217,8 +235,6 @@ class MainActivity : AppCompatActivity() {
             permissions.entries.forEach {
                 Log.d("test006", "${it.key} = ${it.value}")
             }
-
-            Log.d("Bluetooth", "received res")
         }
 
 
@@ -226,7 +242,7 @@ class MainActivity : AppCompatActivity() {
         if(btConnectionThread != null && btConnectionThread!!.isConnected()) {
             btConnectionThread!!.writeData(data)
         } else {
-            Toast.makeText(applicationContext,"Du är inte connectad till bluetooth",Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext,getString(R.string.error_msg_bt_not_connected),Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -241,19 +257,16 @@ class MainActivity : AppCompatActivity() {
             device.createInsecureRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"))//btDeviceAddress)
         }
 
-        public fun isConnected(): Boolean {
-            if(this::mmOutStream.isInitialized)
-                return mmOutStream != null;
-            else
-                return false
+        fun isConnected(): Boolean {
+            return this::mmOutStream.isInitialized
         }
 
-        public fun writeData(data: Int) {
+        fun writeData(data: Int) {
             try {
                 val byteArr: ByteArray = ByteBuffer.allocate(4).putInt(data).array()
                 mmOutStream.write(byteArr);
-            } catch (e: java.lang.Exception) {
-                Log.e("bluetooth", "Exception during write", e)
+            } catch (error: java.lang.Exception) {
+                Log.e("bluetooth", error.toString())
             }
         }
 
@@ -270,8 +283,8 @@ class MainActivity : AppCompatActivity() {
                         socket.connect()
                         // The connection attempt succeeded. Perform work associated with
                         // the connection in a separate thread.
-                        if(socket.isConnected()) {
-                            Log.d("bluetooth", "Is Connected")
+                        if(socket.isConnected) {
+                            bluetoothStatusText.text = getString(R.string.bluetooth_connected)
                             imageView2.setImageResource(R.drawable.rb_connected)
                             mmInStream = socket.inputStream
                             mmOutStream = socket.outputStream
@@ -287,8 +300,8 @@ class MainActivity : AppCompatActivity() {
         fun cancel() {
             try {
                 mmSocket?.close()
-            } catch (e: IOException) {
-                Log.e(TAG, "Could not close the client socket", e)
+            } catch (error: IOException) {
+                Log.e(TAG, error.toString())
             }
         }
     }
