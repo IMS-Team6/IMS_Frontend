@@ -335,7 +335,9 @@ class MapHistoryFragment : Fragment() {
 
             // Execute request
             val response = client.newCall(request).execute()
-            if (response.isSuccessful) {
+            val statusCode = response.code
+
+            if (statusCode == 200) {
                 result = response.body?.string()
             }
         } catch (error: Error) {
