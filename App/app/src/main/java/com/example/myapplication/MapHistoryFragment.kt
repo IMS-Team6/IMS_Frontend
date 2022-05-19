@@ -21,11 +21,11 @@ import java.net.URL
 
 class MapHistoryFragment : Fragment() {
     private lateinit var viewOfLayout: View
-    private lateinit var client: OkHttpClient
-
     private lateinit var graphTitle: TextView
     private lateinit var mapView: ImageView
     private lateinit var showCollisionsButton: Button
+  
+    private lateinit var client: OkHttpClient
 
     private lateinit var fetchedSession: Session
     private var selectedSessionId: String = ""
