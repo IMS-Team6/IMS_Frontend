@@ -335,7 +335,9 @@ class MapHistoryFragment : Fragment() {
 
             // Execute request
             val response = client.newCall(request).execute()
-            result = response.body?.string()
+            if (response.isSuccessful) {
+                result = response.body?.string()
+            }
         } catch (error: Error) {
             Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show();
         }
