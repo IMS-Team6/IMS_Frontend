@@ -98,26 +98,20 @@ class MainActivity : AppCompatActivity() {
 
         // Setup textview
         bluetoothStatusText = findViewById(R.id.btTextStatus)
+        updateBtConnectionStatus()
 
         // Create BluetoothManager
         val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
         val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
 
-        if(btConnectionThread != null && btConnectionThread!!.isConnected())
-            imageView2.setImageResource(R.drawable.rb_connected)
-        else
-            imageView2.setImageResource(R.drawable.not_connected)
-
-
+        // Setup bluetooth connect button.
         val bluetoothConnectBtn: Button = findViewById(R.id.bluetoothConnectButton)
 
         bluetoothConnectBtn.setOnClickListener {
             // Check if device supports bluetooth
             if (bluetoothAdapter == null) {
-                Log.d("bluetooth", "Device does not support bluetooth.")
+                Toast.makeText(applicationContext,getString(R.string.error_msg_bt_not_supported),Toast.LENGTH_SHORT).show()
             } else {
-                Log.d("bluetooth", "Bluetooth is supported.")
-
                 // Check if bluetooth is enabled
                 if (!bluetoothAdapter.isEnabled) {
                     val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
@@ -140,6 +134,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateBtConnectionStatus() {
+        if (checkConnectionStatus()) {
+            imageView2.setImageResource(R.drawable.rb_connected)
+            bluetoothStatusText.text = getString(R.string.bluetooth_connected)
+        } else {
+            imageView2.setImageResource(R.drawable.not_connected)
+            bluetoothStatusText.text = getString(R.string.bluetooth_not_connected)
+        }
+    }
+
+    fun checkConnectionStatus(): Boolean {
+        return btConnectionThread != null && btConnectionThread!!.isConnected()
+    }
+
     fun getCollisionImageObjects(): List<CollisionInfo> {
         return collisionImageObjects
     }
@@ -149,7 +157,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissions(): Boolean {
-        var result = false;
+        var result = false
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 
             PermissionsBasedOnSDKVersion.sdk31Permissions.forEach {
@@ -199,11 +208,11 @@ class MainActivity : AppCompatActivity() {
 
     private var requestBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
-            //granted
-            Log.d("Bluetooth Status -->", "Bluetooth permission granted")
+            // Bluetooth request granted.
+            bluetoothStatusText.text = getString(R.string.bluetooth_connected)
         }else{
-            //deny
-            Log.d("Bluetooth Status -->", "Bluetooth permission denied")
+            // Bluetooth request denied.
+            bluetoothStatusText.text = getString(R.string.bluetooth_not_connected)
         }
     }
 
@@ -212,8 +221,6 @@ class MainActivity : AppCompatActivity() {
             permissions.entries.forEach {
                 Log.d("test006", "${it.key} = ${it.value}")
             }
-
-            Log.d("Bluetooth", "received res")
         }
 
 
