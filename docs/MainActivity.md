@@ -1,6 +1,13 @@
 # MainActivity
 
-Behålla?:
+# - Permission object
+   -Contans an array for SDk permission for accesing coarse location, bluetooth and bluetooth admin. 
+   -There are also applied SDK permission levels 29,30 and 31 SDK permissions.
+   
+# - MainActivity class
+   -
+
+
 - My Bluetooth service kit
    - The MyBluetoothService.kt file contains the imports, class, inner class and thread, functions and static varibles.
    - Three static global integer varibles for READ, WRITE and TOAST. 
