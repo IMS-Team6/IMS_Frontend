@@ -43,6 +43,11 @@ object PermissionsBasedOnSDKVersion {
         Manifest.permission.BLUETOOTH,
         Manifest.permission.BLUETOOTH_ADMIN
     )
+    var sdk29Permissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.BLUETOOTH,
+        Manifest.permission.BLUETOOTH_ADMIN
+    )
     var sdk28Permissions =arrayOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.BLUETOOTH,
@@ -134,6 +139,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
+    }
+
     private fun updateBtConnectionStatus() {
         if (checkConnectionStatus()) {
             imageView2.setImageResource(R.drawable.rb_connected)
@@ -160,21 +170,27 @@ class MainActivity : AppCompatActivity() {
         var result = false
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-
-            PermissionsBasedOnSDKVersion.sdk31Permissions.forEach {
+            PermissionsBasedOnSDKVersion.sdk31Permissions.forEach { // Sdk version 31.
                 result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
                 if(!result)
                     return  result;
             }
         }
-        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) { // Sdk version 30.
             PermissionsBasedOnSDKVersion.sdk30Permissions.forEach {
                 result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
                 if(!result)
                     return  result;
             }
         }
-        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) { // Sdk version 29.
+            PermissionsBasedOnSDKVersion.sdk29Permissions.forEach {
+                result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+                if(!result)
+                    return  result;
+            }
+        }
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) { // Sdk version 28.
             PermissionsBasedOnSDKVersion.sdk28Permissions.forEach {
                 result = ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
                 if(!result)
@@ -185,17 +201,15 @@ class MainActivity : AppCompatActivity() {
         return result;
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(receiver)
-    }
-
     private fun setupBluetoothPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk31Permissions)
         }
         else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
             requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk30Permissions)
+        }
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk29Permissions)
         }
         else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             requestMultiplePermissions.launch(PermissionsBasedOnSDKVersion.sdk28Permissions)
@@ -209,10 +223,10 @@ class MainActivity : AppCompatActivity() {
     private var requestBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             // Bluetooth request granted.
-            bluetoothStatusText.text = getString(R.string.bluetooth_connected)
+            Log.d("requestBluetooth", "Granted")
         }else{
             // Bluetooth request denied.
-            bluetoothStatusText.text = getString(R.string.bluetooth_not_connected)
+            Log.d("requestBluetooth", "Denied")
         }
     }
 
