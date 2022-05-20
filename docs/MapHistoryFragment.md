@@ -209,6 +209,21 @@ Takes a string url as an arguemtn and make calls a funtion that in turns perform
 ```
 private fun getRequest(sUrl: String): String?
 ```
+-----------------
+###  checkForInternet
+A function that takes in the current application context as argument and checks if the user is connected to the internet or not and returns a boolean value accordingly. 
+
+| Parameters | Type |
+| ----------- | ----------- | 
+| context | Context |
+
+| Returns |
+| --------|
+| Boolean |
+
+```
+private fun checkForInternet(context: Context): Boolean
+```
 
 
 
