@@ -1,7 +1,10 @@
 package com.example.myapplication
 
+import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -251,7 +254,9 @@ class MapHistoryFragment : Fragment() {
                     Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(activity,getString(R.string.error_msg_no_response),Toast.LENGTH_SHORT).show()
+                requireActivity().runOnUiThread {
+                    Toast.makeText(activity, getString(R.string.error_msg_no_response), Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -292,7 +297,9 @@ class MapHistoryFragment : Fragment() {
                     Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(activity,getString(R.string.error_msg_no_response),Toast.LENGTH_SHORT).show()
+                requireActivity().runOnUiThread {
+                    Toast.makeText(activity, getString(R.string.error_msg_no_response), Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -318,33 +325,68 @@ class MapHistoryFragment : Fragment() {
                     Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(activity,getString(R.string.error_msg_no_response),Toast.LENGTH_SHORT).show()
+                requireActivity().runOnUiThread {
+                    Toast.makeText(activity, getString(R.string.error_msg_no_response), Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
     private fun getRequest(sUrl: String): String? {
         var result: String? = null
+        val isConnected = checkForInternet(requireContext())
 
-        try {
-            // Create URL
-            val url = URL(sUrl)
+        if (isConnected) {
+            try {
+                // Create URL
+                val url = URL(sUrl)
 
-            // Build request
-            val request = Request.Builder().url(url).build()
+                // Build request
+                val request = Request.Builder().url(url).build()
 
-            // Execute request
-            val response = client.newCall(request).execute()
-            val statusCode = response.code
+                // Execute request
+                val response = client.newCall(request).execute()
+                val statusCode = response.code
 
-            if (statusCode == 200) {
-                result = response.body?.string()
+                if (statusCode == 200) {
+                    result = response.body?.string()
+                }
+            } catch (error: Error) {
+                Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show();
             }
-        } catch (error: Error) {
-            Toast.makeText(activity,error.toString(),Toast.LENGTH_SHORT).show();
+        } else {
+            requireActivity().runOnUiThread {
+                Toast.makeText(activity, getString(R.string.error_msg_no_internet_connection), Toast.LENGTH_SHORT).show()
+            }
         }
 
         return result
+    }
+
+    private fun checkForInternet(context: Context): Boolean {
+
+        // register activity with the connectivity manager service
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        // Returns a Network object corresponding to
+        // the currently active default data network.
+        val network = connectivityManager.activeNetwork ?: return false
+
+        // Representation of the capabilities of an active network.
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+        return when {
+            // Indicates this network uses a Wi-Fi transport,
+            // or WiFi has network connectivity
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+
+            // Indicates this network uses a Cellular transport. or
+            // Cellular has network connectivity
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+
+            // else return false
+            else -> false
+        }
     }
 }
 
