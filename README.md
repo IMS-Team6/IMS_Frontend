@@ -1,8 +1,12 @@
 # IMS_Frontend: Frontend Documentation
 
-## Introduction, purpose:
-Frontend application created in Android Studio. 
-Purpose of the app is to control the mower and fetch data from backend.
+## Introduction
+Frontend application created in Android Studio with Kotlin programming language. 
+# Purpose
+Purpose of the app is to interact with the mower. Main functionalities of the application are to Control mower manual or automatically and to fetch images from the backend.
+# Design
+
+
 
 ---------
 
@@ -11,7 +15,7 @@ Purpose of the app is to control the mower and fetch data from backend.
 2. Open repository https://github.com/IMS-Team6/IMS_Frontend/tree/main/App
 3. Clone the code and display it in Android Studio.
 4. Connect the android phone to the computer and choose Physical connected device in Device Manager instead of built-in simulator.
-5. Run the application
+5. Run the application.
 
 ---------
 
