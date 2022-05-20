@@ -65,5 +65,5 @@ Takes a string as a url and uses it with a library called to fetch the selected 
 | Void |
 
 ```
-private fun populateSpinnerWithImageIds() 
+private fun showImageFromApi(sUrl: String)
 ```
