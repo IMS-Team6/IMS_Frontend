@@ -1,0 +1,41 @@
+<Mikael Mohlin - Week 20>
+
+16/5
+As usual we had a sprint planning meeting with the whole group. For the frontend part, our goal was to make the app able to fetch images from the backend, 
+but also finalize the overall design, remove minor bugs and make sure that everything in the app runs smoothely. We also had a goal to write a documentation 
+of every relevant module and functions of our android application.
+I spent some time working on my own where I created the fundemental layout for the ImageFragment.
+(~ 3 hours)
+
+17/5
+I continued working on the ImageFragment, where I managed to fetch meta data about the different collision images and populate them into a spinner item on the app.
+Later on I added so the user could use a specific meta data object selected in the spinner item, to fetch a specific image belonging to a specific session and
+display it into an ImageView inside the ImageFragment. So, the overall goal to fetch an image from the backend and display on the app was now fulfilled. However,
+there were still some minor bugs to solve, such as fixing so the layout wont be overlapped when the backbutton is pressed etc. I took some time to fix those issues
+aswell.
+(~ 6 hours)
+
+18/5
+I continued working on the ImageFragment with intention to fix any occuring bugs and crashes. One specific problem I encountered was that the app crashed if there were
+not images for a session to display. So, in order to make the app running even after an object contains an empty set of images, I had too set a check and ensure that
+the app did not try to parse an empty object.
+Later on when i felt finished with the branch 'collision_images' and merged it into the main branch.
+Further on I went to clean up some of the code and files inside the main branch.
+(~ 4 hours)
+
+19/5
+I took some time to fix some minor issues in the main branch, things such as adding a permission check for sdk-version 20, fixed a bug where the connection status
+between app and mover were not properly displayed, and a response code check to see if a GET-request to the API was successful or not.
+Afterwards I started writing documentation for the frontend project.
+(~ 4 hours)
+
+20/5
+I continued writing the documentation for the frontend project.
+Later on I got a PM for a team-member that the app crashed if there were not internet connection established. Therefore, I took some time to fix that issue and
+make sure that the app initially check if it has internet connection or not.
+(~ 3 hours)
+
+Total time spent: ~ 20 hours
+
+
+
