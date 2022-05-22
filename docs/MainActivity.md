@@ -19,7 +19,7 @@ Start screen initial activity for the application that is connected to bottom me
    - TOAST varible is used in write function when error occurs when sending data. The toast varible is for sending error message.
    - The service of main activity for bluetooth is handled with Bluetooth Adapter. The function cancel() is implemeted for shutting down the connection with a try block. When closing socket connection fails it is handled with a catch block. The READ, WRITE and TOAST is handled in Log.e.
    - The cancel function in Bluetooth adapter is handled with try and catch block, where try block is trying to close the socket and catch is throwing and error in log.e.
-   - 
+   
  # Key words in main activity
 onCreate:
 Creates the UI for bluetooth and collision functions.
